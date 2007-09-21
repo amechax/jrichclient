@@ -186,7 +186,7 @@
 		<developer>
 			<id>alspaughb</id>
 			<name>Bruce Alspaugh</name>
-			<email>alspaughb@gmail.com</email>
+			<email>compulinkltd@gmail.com</email>
 			<organization>CompuLink, Ltd</organization>
 			<organizationUrl>http://www.compulink-ltd.com/</organizationUrl>
 			<roles>
@@ -211,14 +211,14 @@
     </organization>
     
 	<scm>
-		<url>http://compulinkltd.devjavu.com/projects/compulinkltd/browser/repos/jrichclient</url>
-		<!-- <connection>http://svn.devjavu.com/compulinkltd/repos/jrichclient/</connection> -->
-		<!-- <developerConnection>http://svn.devjavu.com/compulinkltd/repos/jrichclient/</developerConnection> -->
+		<url>http://jrichclient.googlecode.com/svn/</url>
+		<connection>scm:svn:http://jrichclient.googlecode.com/svn/trunk/</connection>
+		<developerConnection>scn:svn:https://jrichclient.googlecode.com/svn/trunk/</developerConnection>
     </scm>
     
     <issueManagement>
-    	<system>Devjavu Trac issue tracker</system>
-    	<url>http://compulinkltd.devjavu.com/projects/compulinkltd/report</url>
+    	<system>Google Code issue tracker</system>
+    	<url>http://code.google.com/p/jrichclient/issues/list</url>
     </issueManagement>
     
 	<distributionManagement>
