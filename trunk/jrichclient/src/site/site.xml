@@ -13,15 +13,18 @@
 	
 	<poweredBy>
     	<logo name="Built with Maven" href="http://maven.apache.org/"
-        	img="images/logos/maven-feather.png" />
+        	img="http://maven.apache.org/images/logos/build-by-maven-white.png" />
         <logo name="Java Get Powered" href="http://java.com/java/download/index.jsp?cid=jdp114296" 
-        	img="images/logos/get_powered_sm.jpg" />
+        	img="http://java.com/im/get_powered_sm.jpg" />
+        <logo name="Google Code" href="http://code.google.com/p/jrichclient"
+        	img="http://code.google.com/images/code_sm.png" />
   	</poweredBy>
 	
 	<publishDate format="dd MMM yyyy" />
 	<body>
 		<links>
 			<item name="Maven" href="http://maven.apache.org" />
+			<item name="Google Code" href="http://code.google.com/p/jrichclient" />
 			<item name="Project Page" href="index.html" />
 		</links>
 		
