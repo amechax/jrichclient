@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="http://www.richdock.org/jnlp" href="launch.jnlp">
+	<information>
+		<title>RichDock Demo Application</title>
+		<vendor>JRichClient</vendor>
+		<homepage>http://www.jrichclient.org/</homepage>
+		<description kind="one-line">Docking demo</description>
+		<offline-allowed />
+	</information>
+
+	<security>
+		<all-permissions />
+	</security>
+
+	<resources>
+		<j2se version="1.5+" />
+		<jar href="richdock-demo-0.1.jar" main="true"/>
+		<jar href="richdock-0.1.jar"/>
+		<jar href="multisplitpane-0.1.jar"/>
+	</resources>
+
+	<application-desc main-class="org.jrichclient.richdock.demo.BasicDemo" />
+</jnlp>
