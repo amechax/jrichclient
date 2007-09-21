@@ -1,0 +1,14 @@
+<projectDescription>
+  <name>multisplitpane</name>
+  <comment>JRichClient is a library to build Java Rich Client Applications.  The
+		first module is RichDock, a Swing docking framework.</comment>
+  <projects/>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>

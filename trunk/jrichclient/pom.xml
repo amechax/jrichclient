@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0    
+		http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.jrichclient</groupId>
+	<artifactId>jrichclient</artifactId>
+	<version>0.1</version>
+	<packaging>pom</packaging>
+	
+	<name>jrichclient</name>
+	<description>
+		JRichClient is a library to build Java Rich Client Applications.  The
+		first module is RichDock, a Swing docking framework.
+	</description>
+	<url>http://www.jrichclient.org/</url>
+	
+	<modules>
+    	<module>multisplitpane</module>
+    	<module>richdock</module>
+    	<module>richdock-demo</module>
+    	<module>jrichclient-site-skin</module>
+  	</modules>
+  	  	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jrichclient</groupId>
+				<artifactId>multisplitpane</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jrichclient</groupId>
+				<artifactId>richdock</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jrichclient</groupId>
+				<artifactId>richdock-demo</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jrichclient</groupId>
+				<artifactId>richdock-jnlp</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jrichclient</groupId>
+				<artifactId>website</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.3.1</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.easymock</groupId>
+				<artifactId>easymock</artifactId>
+				<version>2.3</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/release.xml</descriptor>
+						<descriptor>src/main/assembly/website.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<configuration>
+							<links>
+								<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+							</links>
+							<groups>
+								<group>
+									<title>Core Packages</title>
+									<packages>org.jrichclient.richdock:org.jrichclient.richdock.dockable:org.jrichclient.richdock.dockingport:org.jrichclient.richdock.dockingport.tabbar:org.jrichclient.richdock.helper:org.jrichclient.richdock.icons:org.jrichclient.richdock.utils</packages>
+								</group>
+								<group>
+									<title>JXMultiSplitPane</title>
+									<packages>org.jrichclient.richdock.multisplitpane</packages>
+								</group>
+								<group>
+									<title>Demo Packages</title>
+									<packages>org.jrichclient.richdock.demo</packages>
+								</group>
+							</groups>
+							<excludePackageNames>org.jrichclient.richdock.demo:org.jrichclient.richdock.multisplitpane</excludePackageNames>
+							<aggregate>true</aggregate>
+							<stylesheet>maven</stylesheet>
+						</configuration>
+						<reports>
+							<report>javadoc</report>
+							<!-- <report>test-javadoc</report> -->
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<configuration>
+							<linkJavadoc>true</linkJavadoc>
+							<aggregate>true</aggregate>
+						</configuration>
+						<reports>
+							<report>jxr</report>
+							<!-- <report>test-jxr</report> -->
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<configuration>
+					<linkXref>true</linkXref>
+					<targetJdk>1.5</targetJdk>
+					<minimumTokens>300</minimumTokens>
+					<aggregate>true</aggregate>
+					<ruleSets>
+						<ruleset>/rulesets/basic.xml</ruleset>
+						<ruleset>/rulesets/imports.xml</ruleset>
+						<ruleset>/rulesets/unusedcode.xml</ruleset>
+						<ruleset>/rulesets/design.xml</ruleset>
+					</ruleSets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<configuration>
+					<aggregate>true</aggregate>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>index</report>
+							<report>dependency-convergence</report>
+							<report>issue-tracking</report>
+							<!-- <report>mailing-list</report> -->
+							<report>license</report>
+							<report>summary</report>
+							<report>project-team</report>
+							<report>scm</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
+	
+	<developers>
+		<developer>
+			<id>alspaughb</id>
+			<name>Bruce Alspaugh</name>
+			<email>alspaughb@gmail.com</email>
+			<organization>CompuLink, Ltd</organization>
+			<organizationUrl>http://www.compulink-ltd.com/</organizationUrl>
+			<roles>
+				<role>Project Manager</role>
+				<role>Architect</role>
+			</roles>
+			<timezone>-6</timezone>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License (GPL) version 2</name>
+            <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+            <distribution>manual</distribution>
+        </license>
+    </licenses>
+    
+    <organization>
+    	<name>CompuLink, Ltd.</name>
+    	<url>http://www.compulink-ltd.com/</url>
+    </organization>
+    
+	<scm>
+		<url>http://compulinkltd.devjavu.com/projects/compulinkltd/browser/repos/jrichclient</url>
+		<!-- <connection>http://svn.devjavu.com/compulinkltd/repos/jrichclient/</connection> -->
+		<!-- <developerConnection>http://svn.devjavu.com/compulinkltd/repos/jrichclient/</developerConnection> -->
+    </scm>
+    
+    <issueManagement>
+    	<system>Devjavu Trac issue tracker</system>
+    	<url>http://compulinkltd.devjavu.com/projects/compulinkltd/report</url>
+    </issueManagement>
+    
+	<distributionManagement>
+		<site>
+			<id>1and1</id>
+			<url>http://jrichclient.sourceforge.net/</url>
+		</site>
+	</distributionManagement>
+</project>

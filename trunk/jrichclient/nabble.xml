@@ -1,0 +1,87 @@
+<html>
+<head>
+  <title>JRichClient - Forum</title>
+  <style type="text/css" media="all">
+    @import url("http://richdock.com/css/maven-base.css");
+    @import url("http://richdock.com/css/maven-theme.css");
+    @import url("http://richdock.com/css/site.css");
+  </style>
+  <link rel="stylesheet" href="http://richdock.com/css/print.css" type="text/css" media="print" />
+  <meta name="author" content="Bruce Alspaugh" />
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+</head>
+<body>
+  <div class="composite">
+    <div id="banner">
+      <a href="http://richdock.com/index.html" id="bannerLeft">
+        <img src="http://richdock.com/images/leftbanner.gif" alt="" />
+      </a>
+      <div class="clear"><hr /></div>
+    </div>
+    <div id="breadcrumbs">  
+      <div class="xleft">Last Published: 20 Sep 2007 | 
+        <a href="http://richdock.com">JRichClient</a>
+      </div>
+      <div class="xright"><a href="http://maven.apache.org">Maven</a>|
+        <a href="http://richdock.com/index.html">Project Page</a>
+      </div>
+      <div class="clear"><hr /></div>
+    </div>
+    
+    <table width=100%>
+      <tr>
+        <td valign="top" align="left" width=1%>
+    <div id="leftColumn">
+      <div id="navcolumn">
+        <h5>JRichClient</h5>
+        <ul>
+          <li class="none">
+            <a href="http://richdock.com">Home</a>
+          </li>
+          <li class="none">
+            <a href="http://richdock.com/demo.html">Demo</a>
+          </li>
+          <li class="none">
+            <a href="http://richdock.com/faq.html">FAQ</a>
+          </li>
+          <li class="none">
+            <a href="http://richdock.com/contribute.html">Contribute</a>
+          </li> 
+          <li class="none">
+            <strong>Forum</strong>
+          </li>
+        </ul>
+        <h5>Project Documentation</h5>
+        <ul>
+          <li class="collapsed">
+            <a href="http://richdock.com/project-info.html">Project Information</a>
+          </li> 
+          <li class="collapsed">
+            <a href="http://richdock.com/project-reports.html">Project Reports</a>
+          </li>
+        </ul>              
+        <a href="http://maven.apache.org/" title="Built with Maven" id="poweredBy">
+          <img alt="Built with Maven" src="http://maven.apache.org/images/logos/maven-feather.png" />
+        </a>                        
+        <a href="http://java.com/java/download/index.jsp?cid=jdp114296" title="Java Get Powered" id="poweredBy">
+        <img alt="Java Get Powered" src="http://java.com/im/get_powered_sm.jpg" />
+        </a>  
+      </div>
+    </div>   		
+        </td>
+    		
+        <td id="bodyColumn" style="padding-left:1em;" valign="top">
+          <meta name="keyword" content="Docking"></meta>
+          <div class='nabble' id='nabble' />
+        </td>
+      </tr>
+    </table>
+    
+    <div class="clear"><hr /></div>
+    <div id="footer">
+      <div class="xright">&#169;2007 CompuLink, Ltd.</div>
+      <div class="clear"><hr /></div>
+    </div>
+  </div>
+  </body>
+</html>
