@@ -181,6 +181,12 @@ public class TabbedPaneDockingPort extends JPanel implements DockingPort<Integer
 		helper.setDockingPort(dockingPort);
 	}
 	
+// Component *******************************************************************
+	
+	public JPanel getComponent() {
+		return this;
+	}
+	
 // Dock/Undock *****************************************************************
 	
 	public void dock(Dockable dockable, Integer location) {
@@ -273,7 +279,7 @@ public class TabbedPaneDockingPort extends JPanel implements DockingPort<Integer
 		} else {
 			switch (getDockableCount()) {
 				case 1:
-					setContent((Component)dockable);
+					setContent(dockable.getComponent());
 					break;
 				case 2:
 					setContent(tabbedPane);
@@ -299,7 +305,7 @@ public class TabbedPaneDockingPort extends JPanel implements DockingPort<Integer
 	
 	private Component createTabComponent(Dockable dockable) {
 		JPanel container = new JPanel(new BorderLayout());
-		container.add((Component)dockable, BorderLayout.CENTER);
+		container.add(dockable.getComponent(), BorderLayout.CENTER);
 		container.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		
 		return container;
@@ -323,7 +329,7 @@ public class TabbedPaneDockingPort extends JPanel implements DockingPort<Integer
 					setContent(null);
 					tabbedPane.removeTabAt(1);
 					tabbedPane.removeTabAt(0);
-					setContent((Component)getDockable(0));
+					setContent(getDockable(0).getComponent());
 					break;
 				default:
 					tabbedPane.removeTabAt(location);

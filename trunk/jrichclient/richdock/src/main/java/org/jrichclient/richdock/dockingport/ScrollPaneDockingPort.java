@@ -134,6 +134,12 @@ public class ScrollPaneDockingPort extends JScrollPane implements DockingPort<St
 	public void setDockingPort(DockingPort<?> dockingPort) {
 		helper.setDockingPort(dockingPort);
 	}
+	
+// Component *******************************************************************
+	
+	public JScrollPane getComponent() {
+		return this;
+	}
 
 // Dock/Undock *****************************************************************
 
@@ -143,31 +149,6 @@ public class ScrollPaneDockingPort extends JScrollPane implements DockingPort<St
 
 	public void undock(Dockable dockable, boolean disposeOnEmpty) {
 		helper.undock(dockable, disposeOnEmpty);
-	}
-	
-// Install/Uninstall ***********************************************************
-	
-	private void install(Dockable dockable, String location) {
-		if (!LOCATIONNAME_CONTENT.equals(location))
-			throw new IllegalArgumentException("Illegal docking location: " + location);
-		
-		setViewportView((Component)dockable);
-		
-		setTitle(dockable.getTitle());
-		setIconFile(dockable.getIconFile());
-		setToolTipText(dockable.getToolTipText());
-		setPopupMenu(dockable.getPopupMenu());
-		dockable.addPropertyChangeListener(helper.getDockableListener());
-	}
-	
-	private void uninstall(Dockable dockable) {
-		setViewport(null);
-		
-		dockable.removePropertyChangeListener(helper.getDockableListener());
-		setTitle("");
-		setIconFile(null);
-		setToolTipText(null);
-		setPopupMenu(null);
 	}
 	
 // Lookups *********************************************************************
@@ -210,6 +191,31 @@ public class ScrollPaneDockingPort extends JScrollPane implements DockingPort<St
 		protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
 			ScrollPaneDockingPort.this.firePropertyChange(propertyName, oldValue, newValue);
 		}
+	}
+	
+// Install/Uninstall ***********************************************************
+	
+	private void install(Dockable dockable, String location) {
+		if (!LOCATIONNAME_CONTENT.equals(location))
+			throw new IllegalArgumentException("Illegal docking location: " + location);
+		
+		setViewportView(dockable.getComponent());
+		
+		setTitle(dockable.getTitle());
+		setIconFile(dockable.getIconFile());
+		setToolTipText(dockable.getToolTipText());
+		setPopupMenu(dockable.getPopupMenu());
+		dockable.addPropertyChangeListener(helper.getDockableListener());
+	}
+	
+	private void uninstall(Dockable dockable) {
+		setViewport(null);
+		
+		dockable.removePropertyChangeListener(helper.getDockableListener());
+		setTitle("");
+		setIconFile(null);
+		setToolTipText(null);
+		setPopupMenu(null);
 	}
 	
 // ScrollPaneDropHelper ********************************************************

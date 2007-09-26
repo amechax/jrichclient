@@ -244,6 +244,12 @@ public class ScrollArrowDockingPort extends JPanel implements DockingPort<String
 		helper.setDockingPort(dockingPort);
 	}
 	
+// Component *******************************************************************
+	
+	public JPanel getComponent() {
+		return this;
+	}
+	
 // Dock/Undock *****************************************************************
 
 	public void dock(Dockable dockable, String location) {
@@ -254,31 +260,6 @@ public class ScrollArrowDockingPort extends JPanel implements DockingPort<String
 		helper.undock(dockable, disposeOnEmpty);
 	}
 	
-// Install/Uninstall ***********************************************************
-	
-	private void install(Dockable dockable, String location) {
-		if (!LOCATIONNAME_CONTENT.equals(location))
-			throw new IllegalArgumentException("Invalid location: " + location);
-		
-		viewport.setView((Component)dockable);
-		
-		setTitle(dockable.getTitle());
-		setIconFile(dockable.getIconFile());
-		setToolTipText(dockable.getToolTipText());
-		setPopupMenu(dockable.getPopupMenu());
-		dockable.addPropertyChangeListener(helper.getDockableListener());
-	}
-	
-	private void uninstall(Dockable dockable) {
-		viewport.setView(null);
-		
-		dockable.removePropertyChangeListener(helper.getDockableListener());
-		setTitle("");
-		setIconFile(null);
-		setToolTipText(null);
-		setPopupMenu(null);
-	}
-
 // Lookups *********************************************************************
 
 	public int getDockableCount() {
@@ -321,6 +302,31 @@ public class ScrollArrowDockingPort extends JPanel implements DockingPort<String
 		}
 	}
 	
+// Install/Uninstall ***********************************************************
+	
+	private void install(Dockable dockable, String location) {
+		if (!LOCATIONNAME_CONTENT.equals(location))
+			throw new IllegalArgumentException("Invalid location: " + location);
+		
+		viewport.setView(dockable.getComponent());
+		
+		setTitle(dockable.getTitle());
+		setIconFile(dockable.getIconFile());
+		setToolTipText(dockable.getToolTipText());
+		setPopupMenu(dockable.getPopupMenu());
+		dockable.addPropertyChangeListener(helper.getDockableListener());
+	}
+	
+	private void uninstall(Dockable dockable) {
+		viewport.setView(null);
+		
+		dockable.removePropertyChangeListener(helper.getDockableListener());
+		setTitle("");
+		setIconFile(null);
+		setToolTipText(null);
+		setPopupMenu(null);
+	}
+
 // ScrollArrowDropHelper *******************************************************
 	
 	private class ScrollArrowDropHelper extends DropHelper {

@@ -159,6 +159,12 @@ public class DesktopPaneDockingPort extends JDesktopPane implements DockingPort<
 	public void setDockingPort(DockingPort<?> dockingPort) {
 		helper.setDockingPort(dockingPort);
 	}
+	
+// Component *******************************************************************
+	
+	public JDesktopPane getComponent() {
+		return this;
+	}
 
 // Dock/Undock *****************************************************************
 
@@ -168,44 +174,6 @@ public class DesktopPaneDockingPort extends JDesktopPane implements DockingPort<
 
 	public void undock(Dockable dockable, boolean disposeOnEmpty) {
 		helper.undock(dockable, disposeOnEmpty);
-	}
-	
-// Install/Uninstall ***********************************************************
-	
-	private void install(Dockable dockable, Integer location) {
-		if (!(dockable instanceof JInternalFrame)) 
-			throw new IllegalArgumentException("Only JInternalFrames can be docked in a DesktopPaneDockingPort.");
-	
-		JInternalFrame frame = (InternalFrameDockingPort)dockable;
-		// save maximized and minimized state because
-		// calling pack() could change the state
-		boolean maximized = frame.isMaximum();
-		boolean minimized = frame.isIcon();
-
-		Dimension frameSize = frame.getSize();
-		if (frameSize.width == 0 || frameSize.height == 0)
-			frame.pack();
-			
-		Point frameLocation = frame.getLocation();
-		if (frameLocation.x == 0 && frameLocation.y == 0)
-			frame.setLocation(location * X_OFFSET, location * Y_OFFSET);
-			
-		add(frame);
-		frame.setVisible(true);
-			
-		try {
-			frame.setMaximum(maximized);
-			frame.setIcon(minimized);
-		} catch (PropertyVetoException ex) { } //NOPMD
-			
-		validate();
-	}
-	
-	private void uninstall(Dockable dockable) {
-		JInternalFrame frame = (JInternalFrame)dockable;
-		frame.setVisible(false);
-		remove(frame);
-		validate();
 	}
 	
 // Lookups *********************************************************************
@@ -237,12 +205,41 @@ public class DesktopPaneDockingPort extends JDesktopPane implements DockingPort<
 
 		@Override
 		protected void install(Dockable dockable, Integer location) {
-			DesktopPaneDockingPort.this.install(dockable, location);
+			if (!(dockable.getComponent() instanceof JInternalFrame)) 
+				throw new IllegalArgumentException(
+					"Only JInternalFrames can be docked in a DesktopPaneDockingPort.");
+		
+			JInternalFrame frame = (JInternalFrame)dockable.getComponent();
+			// save maximized and minimized state because
+			// calling pack() could change the state
+			boolean maximized = frame.isMaximum();
+			boolean minimized = frame.isIcon();
+
+			Dimension frameSize = frame.getSize();
+			if (frameSize.width == 0 || frameSize.height == 0)
+				frame.pack();
+				
+			Point frameLocation = frame.getLocation();
+			if (frameLocation.x == 0 && frameLocation.y == 0)
+				frame.setLocation(location * X_OFFSET, location * Y_OFFSET);
+				
+			add(frame);
+			frame.setVisible(true);
+				
+			try {
+				frame.setMaximum(maximized);
+				frame.setIcon(minimized);
+			} catch (PropertyVetoException ex) { } //NOPMD
+				
+			validate();
 		}
 
 		@Override
 		protected void uninstall(Dockable dockable, Integer location) {
-			DesktopPaneDockingPort.this.uninstall(dockable);
+			JInternalFrame frame = (JInternalFrame)dockable.getComponent();
+			frame.setVisible(false);
+			remove(frame);
+			validate();
 		}
 
 		@Override

@@ -145,6 +145,12 @@ public class InternalFrameDockingPort extends JInternalFrame implements DockingP
 		helper.setDockingPort(dockingPort);
 	}
 	
+// Component *******************************************************************
+	
+	public JInternalFrame getComponent() {
+		return this;
+	}
+	
 // Dock/Undock *****************************************************************
 
 	public void dock(Dockable dockable, String location) {
@@ -154,42 +160,7 @@ public class InternalFrameDockingPort extends JInternalFrame implements DockingP
 	public void undock(Dockable dockable, boolean disposeOnEmpty) {
 		helper.undock(dockable, disposeOnEmpty);
 	}
-	
-// Install/Uninstall ***********************************************************
-	
-	private void install(Dockable dockable, String location) {
-		if (!LOCATIONNAME_CONTENT.equals(location))
-			throw new IllegalArgumentException("Can only dock into content location");
 		
-		if (dockable instanceof Container) {
-			setContentPane((Container) dockable);
-		} else {
-			JPanel content = new JPanel(new BorderLayout());
-			content.add((Component)dockable, BorderLayout.CENTER);
-			setContentPane(content);
-		}
-		validate();
-		repaint();
-		
-		setTitle(dockable.getTitle());
-		setIconFile(dockable.getIconFile());
-		setToolTipText(dockable.getToolTipText());
-		setPopupMenu(dockable.getPopupMenu());
-		dockable.addPropertyChangeListener(helper.getDockableListener());
-	}
-	
-	private void uninstall(Dockable dockable) {
-		setContentPane(new Container());
-		validate();
-		repaint();
-		
-		dockable.removePropertyChangeListener(helper.getDockableListener());
-		setTitle("");
-		setIconFile(null);
-		setToolTipText(null);
-		setPopupMenu(null);
-	}
-	
 // Lookups *********************************************************************
 
 	public int getDockableCount() {
@@ -223,13 +194,46 @@ public class InternalFrameDockingPort extends JInternalFrame implements DockingP
 
 		@Override
 		protected void uninstall(Dockable dockable, String location) {
-			InternalFrameDockingPort.this.uninstall(dockable);
+			InternalFrameDockingPort.this.uninstall(dockable, location);
 		}
 
 		@Override
 		protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
 			InternalFrameDockingPort.this.firePropertyChange(propertyName, oldValue, newValue);
 		}
+	}
+	
+	private void install(Dockable dockable, String location) {
+		if (!LOCATIONNAME_CONTENT.equals(location))
+			throw new IllegalArgumentException("Can only dock into content location");
+		
+		if (dockable.getComponent() instanceof Container) {
+			setContentPane((Container) dockable.getComponent());
+		} else {
+			JPanel content = new JPanel(new BorderLayout());
+			content.add(dockable.getComponent(), BorderLayout.CENTER);
+			setContentPane(content);
+		}
+		validate();
+		repaint();
+		
+		setTitle(dockable.getTitle());
+		setIconFile(dockable.getIconFile());
+		setToolTipText(dockable.getToolTipText());
+		setPopupMenu(dockable.getPopupMenu());
+		dockable.addPropertyChangeListener(helper.getDockableListener());
+	}
+	
+	private void uninstall(Dockable dockable, String location) {
+		setContentPane(new Container());
+		validate();
+		repaint();
+		
+		dockable.removePropertyChangeListener(helper.getDockableListener());
+		setTitle("");
+		setIconFile(null);
+		setToolTipText(null);
+		setPopupMenu(null);
 	}
 	
 // InternalFrameDropHelper *****************************************************

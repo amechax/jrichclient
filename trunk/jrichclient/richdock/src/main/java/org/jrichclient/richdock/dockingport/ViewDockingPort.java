@@ -212,6 +212,12 @@ public final class ViewDockingPort extends JPanel implements DockingPort<String>
 		helper.setDockingPort(dockingPort);
 	}
 	
+// Component *******************************************************************
+	
+	public JPanel getComponent() {
+		return this;
+	}
+	
 // ToolBar *********************************************************************
 	
     public JToolBar getToolBar() {
@@ -280,38 +286,6 @@ public final class ViewDockingPort extends JPanel implements DockingPort<String>
 
 	public void undock(Dockable dockable, boolean disposeOnEmpty) {
 		helper.undock(dockable, disposeOnEmpty);
-	}
-	
-// Install/Uninstall ***********************************************************
-	
-	private void install(Dockable dockable, String location) {
-		if (!LOCATIONNAME_CONTENT.equals(location))
-			throw new IllegalArgumentException("Invalid location: " + location);
-
-		BorderLayout layout = (BorderLayout)getLayout();
-		Component oldComponent = layout.getLayoutComponent(BorderLayout.CENTER);
-		if (oldComponent != null)
-			remove(oldComponent);
-			
-		add((Component)dockable, BorderLayout.CENTER);
-		validate();
-		
-		setTitle(dockable.getTitle());
-		setIconFile(dockable.getIconFile());
-		setToolTipText(dockable.getToolTipText());
-		setPopupMenu(dockable.getPopupMenu());
-		dockable.addPropertyChangeListener(helper.getDockableListener());
-	}
-	
-	private void uninstall(Dockable dockable) {
-		remove((Component)dockable);
-		validate();
-		
-		dockable.removePropertyChangeListener(helper.getDockableListener());
-		setTitle("");
-		setIconFile(null);
-		setToolTipText(null);
-		setPopupMenu(null);
 	}
 	
 // Lookups *********************************************************************
@@ -500,6 +474,38 @@ public final class ViewDockingPort extends JPanel implements DockingPort<String>
 			ViewDockingPort.this.firePropertyChange(propertyName, oldValue, newValue);
 		}
     }
+    
+// Install/Uninstall ***********************************************************
+	
+	private void install(Dockable dockable, String location) {
+		if (!LOCATIONNAME_CONTENT.equals(location))
+			throw new IllegalArgumentException("Invalid location: " + location);
+
+		BorderLayout layout = (BorderLayout)getLayout();
+		Component oldComponent = layout.getLayoutComponent(BorderLayout.CENTER);
+		if (oldComponent != null)
+			remove(oldComponent);
+			
+		add(dockable.getComponent(), BorderLayout.CENTER);
+		validate();
+		
+		setTitle(dockable.getTitle());
+		setIconFile(dockable.getIconFile());
+		setToolTipText(dockable.getToolTipText());
+		setPopupMenu(dockable.getPopupMenu());
+		dockable.addPropertyChangeListener(helper.getDockableListener());
+	}
+	
+	private void uninstall(Dockable dockable) {
+		remove(dockable.getComponent());
+		validate();
+		
+		dockable.removePropertyChangeListener(helper.getDockableListener());
+		setTitle("");
+		setIconFile(null);
+		setToolTipText(null);
+		setPopupMenu(null);
+	}
     	
 // Focus Mouse Listener ********************************************************
 	
