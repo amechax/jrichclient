@@ -160,6 +160,12 @@ public class SplitPaneDockingPort extends JSplitPane implements DockingPort<Stri
 	public void setDockingPort(DockingPort<?> dockingPort) {
 		helper.setDockingPort(dockingPort);
 	}
+	
+// Component *******************************************************************
+	
+	public JSplitPane getComponent() {
+		return this;
+	}
 
 // Dock/Undock *****************************************************************
 
@@ -171,30 +177,7 @@ public class SplitPaneDockingPort extends JSplitPane implements DockingPort<Stri
 	public void undock(Dockable dockable, boolean disposeOnEmpty) {
 		helper.undock(dockable, disposeOnEmpty);
 	}
-	
-// Install/Uninstall ***********************************************************
-	
-	private void install(Dockable dockable, String location) {
-		if (JSplitPane.LEFT.equals(location)) {
-			setLeftComponent((Component)dockable);
-		} else if (JSplitPane.RIGHT.equals(location)){
-			setRightComponent((Component)dockable);
-		} else if (JSplitPane.TOP.equals(location)) {
-			setTopComponent((Component)dockable);
-		} else if (JSplitPane.BOTTOM.equals(location)) {
-			setBottomComponent((Component)dockable);
-		}
 		
-		validate();
-		repaint();
-	}
-	
-	private void uninstall(Dockable dockable) {
-		remove((Component)dockable);
-		validate();
-		repaint();
-	}
-	
 // Lookups *********************************************************************
 
 	public int getDockableCount() {
@@ -224,12 +207,25 @@ public class SplitPaneDockingPort extends JSplitPane implements DockingPort<Stri
 
 		@Override
 		protected void install(Dockable dockable, String location) {
-			SplitPaneDockingPort.this.install(dockable, location);
+			if (JSplitPane.LEFT.equals(location)) {
+				setLeftComponent(dockable.getComponent());
+			} else if (JSplitPane.RIGHT.equals(location)){
+				setRightComponent(dockable.getComponent());
+			} else if (JSplitPane.TOP.equals(location)) {
+				setTopComponent(dockable.getComponent());
+			} else if (JSplitPane.BOTTOM.equals(location)) {
+				setBottomComponent(dockable.getComponent());
+			}
+			
+			validate();
+			repaint();
 		}
 
 		@Override
 		protected void uninstall(Dockable dockable, String location) {
-			SplitPaneDockingPort.this.uninstall(dockable);
+			remove(dockable.getComponent());
+			validate();
+			repaint();
 		}
 
 		@Override

@@ -165,6 +165,12 @@ public class MultiSplitDockingPort extends JXMultiSplitPane implements DockingPo
 	public void setDockingPort(DockingPort<?> dockingPort) {
 		helper.setDockingPort(dockingPort);
 	}
+	
+// Component *******************************************************************
+	
+	public JXMultiSplitPane getComponent() {
+		return this;
+	}
 
 // Dock/Undock *****************************************************************	
 
@@ -174,41 +180,6 @@ public class MultiSplitDockingPort extends JXMultiSplitPane implements DockingPo
 
 	public void undock(Dockable dockable, boolean disposeOnEmpty) {
 		helper.undock(dockable, disposeOnEmpty);
-	}
-
-// Install/Uninstall ***********************************************************
-	
-	private void install(Dockable dockable, String location) {
-		if (findLeaf(getModel(), location) == null)
-			throw new IllegalArgumentException("Location is not in model");
-		
-		add((Component)dockable, location);
-		revalidate();		
-	}
-	
-	private void uninstall(Dockable dockable) {
-		remove((Component)dockable);
-		revalidate();
-		repaint();
-	}
-	
-	protected static Leaf findLeaf(Node node, String location) {
-		if (node instanceof Leaf) {
-			Leaf leaf = (Leaf)node;
-			if (location.equals(leaf.getName()))
-				return leaf;
-		}
-		
-		if (node instanceof Split) {
-			Split split = (Split)node;
-			for (Node n : split.getChildren()) {
-				Leaf leaf = MultiSplitDockingPort.findLeaf(n, location);
-				if (leaf != null)
-					return leaf;
-			}
-		}
-		
-		return null;
 	}
 	
 // Lookups *********************************************************************
@@ -239,18 +210,43 @@ public class MultiSplitDockingPort extends JXMultiSplitPane implements DockingPo
 
 		@Override
 		protected void install(Dockable dockable, String location) {
-			MultiSplitDockingPort.this.install(dockable, location);
+			if (findLeaf(getModel(), location) == null)
+				throw new IllegalArgumentException("Location is not in model");
+			
+			add(dockable.getComponent(), location);
+			revalidate();		
 		}
 
 		@Override
 		protected void uninstall(Dockable dockable, String location) {
-			MultiSplitDockingPort.this.uninstall(dockable);
+			remove(dockable.getComponent());
+			revalidate();
+			repaint();
 		}
 
 		@Override
 		protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
 			MultiSplitDockingPort.this.firePropertyChange(propertyName, oldValue, newValue);
 		}
+	}
+	
+	protected static Leaf findLeaf(Node node, String location) {
+		if (node instanceof Leaf) {
+			Leaf leaf = (Leaf)node;
+			if (location.equals(leaf.getName()))
+				return leaf;
+		}
+		
+		if (node instanceof Split) {
+			Split split = (Split)node;
+			for (Node n : split.getChildren()) {
+				Leaf leaf = MultiSplitDockingPort.findLeaf(n, location);
+				if (leaf != null)
+					return leaf;
+			}
+		}
+		
+		return null;
 	}
 	
 // MultiSplitDropHelper ********************************************************

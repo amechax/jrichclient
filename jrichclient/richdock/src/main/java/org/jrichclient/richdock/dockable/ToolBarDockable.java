@@ -98,14 +98,14 @@ public class ToolBarDockable extends JToolBar implements Dockable {
 		@Override
 		protected void firePropertyChange(String propertyName, 
 				Object oldValue, Object newValue) {
-			ToolBarDockableHelper.this.firePropertyChange(propertyName, oldValue, newValue);
+			ToolBarDockable.this.firePropertyChange(propertyName, oldValue, newValue);
 		}
 	}
 
 // CanClose ********************************************************************
 	
 	public boolean canClose() {
-		return canClose();
+		return helper.canClose();
 	}
 
 // Dispose *********************************************************************

@@ -168,6 +168,12 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 	public void setDockingPort(DockingPort<?> dockingPort) {
 		helper.setDockingPort(dockingPort);
 	}
+	
+// Component *******************************************************************
+	
+	public JPanel getComponent() {
+		return this;
+	}
 
 // Dock/Undock *****************************************************************
 
@@ -178,39 +184,7 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 	public void undock(Dockable dockable, boolean disposeOnEmpty) {
 		helper.undock(dockable, disposeOnEmpty);
 	}
-	
-// Install/Uninstall ***********************************************************
-	
-	private void install(Dockable dockable, String location) {
-		Component oldComponent = layout.getLayoutComponent(location);
-		if (oldComponent != null)
-			remove(oldComponent);
 		
-		add((Component)dockable, location);
-		validate();
-		
-		if (BorderLayout.CENTER.equals(location)) {
-			setTitle(dockable.getTitle());
-			setIconFile(dockable.getIconFile());
-			setToolTipText(dockable.getToolTipText());
-			setPopupMenu(dockable.getPopupMenu());
-			dockable.addPropertyChangeListener(helper.getDockableListener());
-		}
-	}
-	
-	private void uninstall(Dockable dockable, String location) {
-		remove((Component)dockable);
-		validate();
-		
-		if (BorderLayout.CENTER.equals(location)) {
-			dockable.removePropertyChangeListener(helper.getDockableListener());
-			setTitle("");
-			setIconFile(null);
-			setToolTipText(null);
-			setPopupMenu(null);
-		}
-	}
-	
 // Lookups *********************************************************************
 
 	public int getDockableCount() {
@@ -239,12 +213,34 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 
 		@Override
 		protected void install(Dockable dockable, String location) {
-			BorderLayoutDockingPort.this.install(dockable, location);
+			Component oldComponent = layout.getLayoutComponent(location);
+			if (oldComponent != null)
+				remove(oldComponent);
+			
+			add(dockable.getComponent(), location);
+			validate();
+			
+			if (BorderLayout.CENTER.equals(location)) {
+				setTitle(dockable.getTitle());
+				setIconFile(dockable.getIconFile());
+				setToolTipText(dockable.getToolTipText());
+				setPopupMenu(dockable.getPopupMenu());
+				dockable.addPropertyChangeListener(helper.getDockableListener());
+			}
 		}
 
 		@Override
 		protected void uninstall(Dockable dockable, String location) {
-			BorderLayoutDockingPort.this.uninstall(dockable, location);
+			remove(dockable.getComponent());
+			validate();
+			
+			if (BorderLayout.CENTER.equals(location)) {
+				dockable.removePropertyChangeListener(helper.getDockableListener());
+				setTitle("");
+				setIconFile(null);
+				setToolTipText(null);
+				setPopupMenu(null);
+			}
 		}
 
 		@Override

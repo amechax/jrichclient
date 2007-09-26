@@ -167,6 +167,12 @@ public class BasicDockable extends Container implements Dockable {
 		helper.setDockingPort(dockingPort);
 	}
 	
+// Component *******************************************************************
+	
+	public Container getComponent() {
+		return this;
+	}
+	
 // CanClose ********************************************************************
 
 	public boolean canClose() {

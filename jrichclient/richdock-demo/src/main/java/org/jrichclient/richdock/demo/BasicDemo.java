@@ -5,11 +5,11 @@ import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 import org.jrichclient.richdock.Dockable;
 import org.jrichclient.richdock.dockable.BasicDockable;
+import org.jrichclient.richdock.dockable.ToolBarDockable;
 import org.jrichclient.richdock.dockingport.*;
 import org.jrichclient.richdock.dockingport.tabbar.Rotation;
 import org.jrichclient.richdock.dockingport.tabbar.TabBarDockingPort;
@@ -27,13 +27,15 @@ public final class BasicDemo {
 		desktopPort.dock(createInternalDockable("Test Dockable 2"), 1);
 		desktopPort.setPreferredSize(new Dimension(400, 250));
 		
-		MultiSplitDockingPort multiSplitPort = new MultiSplitDockingPort(
-			new DefaultSplitPaneModel(), "RichDock Demo Application", ImageResources.GLOBE_IMAGE);
+		MultiSplitDockingPort multiSplitPort = 
+			new MultiSplitDockingPort(new DefaultSplitPaneModel(), 
+				"RichDock Demo Application", ImageResources.GLOBE_IMAGE);
+		
 		multiSplitPort.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		multiSplitPort.dock(createAreaDockable("Left Dockable"), DefaultSplitPaneModel.LEFT);
 		multiSplitPort.dock(desktopPort, DefaultSplitPaneModel.TOP);
 		multiSplitPort.dock(createBottomDockable(), DefaultSplitPaneModel.BOTTOM);
-			
+		
 		TabBarDockingPort tabPort = new TabBarDockingPort(Rotation.ROTATION_0);
 		tabPort.dock(createTestDockable("Tab Dockable 1"), 0);
 		tabPort.dock(createTestDockable("Tab Dockable 2"), 1);
@@ -47,7 +49,7 @@ public final class BasicDemo {
 		content.dock(scrollPort, BorderLayout.SOUTH);
 		
 		BorderLayoutDockingPort borderPort = new BorderLayoutDockingPort();
-		borderPort.add(createToolBar(), BorderLayout.NORTH);
+		borderPort.dock(createToolBar(), BorderLayout.NORTH);
 		borderPort.dock(content, BorderLayout.CENTER);
 		
 		FrameDockingPort frameDockingPort = new FrameDockingPort();
@@ -92,27 +94,29 @@ public final class BasicDemo {
 	private static Dockable createBottomDockable() {
 		TabbedPaneDockingPort tabbedPort = new TabbedPaneDockingPort();
 		tabbedPort.setDropable(true);
+		
+		tabbedPort.dock(SystemProperties.createSystemPropertiesDockable(), 0);
+		tabbedPort.dock(ConsoleFactory.createErrorConsole(), 0);
+		tabbedPort.dock(ConsoleFactory.createOutputConsole(), 0);
 		tabbedPort.dock(ProjectDockable.createProjectDockableView(), 0);
-		tabbedPort.dock(ConsoleFactory.createOutputConsole(), 1);
-		tabbedPort.dock(ConsoleFactory.createErrorConsole(), 2);
-		tabbedPort.dock(SystemProperties.createSystemPropertiesDockable(), 3);
+		
 		return tabbedPort;
 	}
 	
-	private static JToolBar createToolBar() {
-		JToolBar toolBar = new JToolBar("Toolbar");
-		toolBar.add(createToolBarButton("save.gif"));
-		toolBar.add(createToolBarButton("refresh.gif"));
-		toolBar.addSeparator();
-		toolBar.add(createToolBarButton("first.gif"));
-		toolBar.add(createToolBarButton("previous.gif"));
-		toolBar.add(createToolBarButton("next.gif"));
-		toolBar.add(createToolBarButton("last.gif"));
-		toolBar.addSeparator();
-		toolBar.add(createToolBarButton("add.gif"));
-		toolBar.add(createToolBarButton("remove.gif"));
-		toolBar.setRollover(true);
-		return toolBar;
+	private static Dockable createToolBar() {
+		ToolBarDockable dockable = new ToolBarDockable("Toolbar");
+		dockable.add(createToolBarButton("save.gif"));
+		dockable.add(createToolBarButton("refresh.gif"));
+		dockable.addSeparator();
+		dockable.add(createToolBarButton("first.gif"));
+		dockable.add(createToolBarButton("previous.gif"));
+		dockable.add(createToolBarButton("next.gif"));
+		dockable.add(createToolBarButton("last.gif"));
+		dockable.addSeparator();
+		dockable.add(createToolBarButton("add.gif"));
+		dockable.add(createToolBarButton("remove.gif"));
+		dockable.setRollover(true);
+		return dockable;
 	}
 	
 	private static JButton createToolBarButton(String fileName) {
@@ -120,7 +124,6 @@ public final class BasicDemo {
 	}
 	
 	public static void main(String[] args) {
-		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				buildDemo();

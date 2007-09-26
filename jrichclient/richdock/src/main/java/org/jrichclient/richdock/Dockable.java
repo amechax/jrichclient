@@ -18,6 +18,8 @@
  */
 package org.jrichclient.richdock;
 
+import java.awt.Component;
+
 import javax.swing.JPopupMenu;
 
 public interface Dockable extends PropertyChangeBroadcaster, Cloneable {
@@ -52,6 +54,8 @@ public interface Dockable extends PropertyChangeBroadcaster, Cloneable {
 	
 	public DockingPort<?> getDockingPort();
 	public void setDockingPort(DockingPort<?> dockingPort);
+	
+	public Component getComponent();
 	
 	public boolean canClose();
 	

@@ -58,7 +58,6 @@ public class FrameDockingPort extends JFrame implements DockingPort<String> {
 		helper.setDisposeOnEmpty(true);
 		
 		dropHelper = new FrameDropHelper(this);
-		
 		closeListener = new CloseListener();
 		addWindowListener(closeListener);
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -143,6 +142,12 @@ public class FrameDockingPort extends JFrame implements DockingPort<String> {
 	public void setDockingPort(DockingPort<?> dockingPort) {
 		helper.setDockingPort(dockingPort);
 	}
+	
+// Component *******************************************************************
+	
+	public JFrame getComponent() {
+		return this;
+	}
 		
 // Dock/Undock *****************************************************************
 
@@ -156,40 +161,7 @@ public class FrameDockingPort extends JFrame implements DockingPort<String> {
 	public void undock(Dockable dockable, boolean disposeOnEmpty) {
 		helper.undock(dockable, disposeOnEmpty);
 	}
-	
-// Install/Uninstall ***********************************************************
-	
-	private void install(Dockable dockable, String location) {
-		if (!LOCATIONNAME_CONTENT.equals(location))
-			throw new IllegalArgumentException("Can only dock into content location");
 		
-		if (dockable instanceof Container) {
-			setContentPane((Container) dockable);
-		} else {
-			JPanel content = new JPanel(new BorderLayout());
-			content.add((Component)dockable, BorderLayout.CENTER);
-			setContentPane(content);
-		}
-		validate();
-		
-		setTitle(dockable.getTitle());
-		setIconFile(dockable.getIconFile());
-		setToolTipText(dockable.getToolTipText());
-		setPopupMenu(dockable.getPopupMenu());
-		dockable.addPropertyChangeListener(helper.getDockableListener());
-	}
-	
-	private void uninstall(Dockable dockable) {
-		setContentPane(new Container());
-		validate();
-		
-		dockable.removePropertyChangeListener(helper.getDockableListener());
-		setTitle("");
-		setIconFile(null);
-		setToolTipText(null);
-		setPopupMenu(null);
-	}
-	
 // Lookups *********************************************************************
 
 	public Dockable getDockable(String location) {
@@ -223,13 +195,44 @@ public class FrameDockingPort extends JFrame implements DockingPort<String> {
 
 		@Override
 		protected void uninstall(Dockable dockable, String location) {
-			FrameDockingPort.this.uninstall(dockable);
+			FrameDockingPort.this.uninstall(dockable, location);
 		}
 
 		@Override
 		protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
 			FrameDockingPort.this.firePropertyChange(propertyName, oldValue, newValue);
 		}
+	}
+	
+	private void install(Dockable dockable, String location) {
+		if (!LOCATIONNAME_CONTENT.equals(location))
+			throw new IllegalArgumentException("Can only dock into content location");
+		
+		if (dockable.getComponent() instanceof Container) {
+			setContentPane((Container)dockable.getComponent());
+		} else {
+			JPanel content = new JPanel(new BorderLayout());
+			content.add(dockable.getComponent(), BorderLayout.CENTER);
+			setContentPane(content);
+		}
+		validate();
+		
+		setTitle(dockable.getTitle());
+		setIconFile(dockable.getIconFile());
+		setToolTipText(dockable.getToolTipText());
+		setPopupMenu(dockable.getPopupMenu());
+		dockable.addPropertyChangeListener(helper.getDockableListener());
+	}
+	
+	private void uninstall(Dockable dockable, String location) {
+		setContentPane(new Container());
+		validate();
+		
+		dockable.removePropertyChangeListener(helper.getDockableListener());
+		setTitle("");
+		setIconFile(null);
+		setToolTipText(null);
+		setPopupMenu(null);
 	}
 	
 // FrameDropHelper *************************************************************

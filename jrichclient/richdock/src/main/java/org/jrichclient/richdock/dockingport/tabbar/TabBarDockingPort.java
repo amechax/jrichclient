@@ -199,6 +199,12 @@ public class TabBarDockingPort extends Box implements DockingPort<Integer> {
 		helper.setDockingPort(dockingPort);
 	}
 	
+// Component *******************************************************************
+	
+	public Box getComponent() {
+		return this;
+	}
+	
 // Dock/Undock *****************************************************************
 
 	public void dock(Dockable dockable, Integer location) {
@@ -208,45 +214,7 @@ public class TabBarDockingPort extends Box implements DockingPort<Integer> {
 	public void undock(Dockable dockable, boolean disposeOnEmpty) {
 		helper.undock(dockable, disposeOnEmpty);
 	}
-	
-// Install/Uninstall ***********************************************************
-	
-	private void install(Dockable dockable, Integer location) {
-		TabBarComponent comp = new TabBarComponent(this, dockable, getRotation());
-		tabList.add(location.intValue(), comp);
-		updateLayout();
-		revalidate();
-		repaint();
-	}
-	
-	private void uninstall(Dockable dockable, Integer location) {
-		tabList.get(location.intValue()).dispose();
-		tabList.remove(location.intValue());
-		
-		if (dockable == getSelectedDockable())
-			setSelectedDockable(null);
-		
-		updateLayout();
-		revalidate();
-		repaint();
-	}
-	
-	private void updateLayout() {
-		while (getComponentCount() > 0)
-			remove(getComponent(0));
-
-		int count = tabList.size();
-		Dimension gapSize = new Dimension(5, 5);
-		for (int index = 0; index < count; index++) {
-			add(tabList.get(index));
-			if (index < count - 1)
-				add(Box.createRigidArea(gapSize));
-		}
-		
-		if (getComponentCount() == 0)
-			add(Box.createRigidArea(gapSize));
-	}
-		
+			
 // Lookups *********************************************************************
 
 	public int getDockableCount() {
@@ -275,12 +243,41 @@ public class TabBarDockingPort extends Box implements DockingPort<Integer> {
 
 		@Override
 		protected void install(Dockable dockable, Integer location) {
-			TabBarDockingPort.this.install(dockable, location);
+			TabBarComponent comp = new TabBarComponent(
+				TabBarDockingPort.this, dockable, getRotation());
+			tabList.add(location.intValue(), comp);
+			updateLayout();
+			revalidate();
+			repaint();
 		}
 
 		@Override
 		protected void uninstall(Dockable dockable, Integer location) {
-			TabBarDockingPort.this.uninstall(dockable, location);
+			tabList.get(location.intValue()).dispose();
+			tabList.remove(location.intValue());
+			
+			if (dockable == getSelectedDockable())
+				setSelectedDockable(null);
+			
+			updateLayout();
+			revalidate();
+			repaint();
+		}
+		
+		private void updateLayout() {
+			while (getComponentCount() > 0)
+				remove(getComponent(0));
+
+			int count = tabList.size();
+			Dimension gapSize = new Dimension(5, 5);
+			for (int index = 0; index < count; index++) {
+				add(tabList.get(index));
+				if (index < count - 1)
+					add(Box.createRigidArea(gapSize));
+			}
+			
+			if (getComponentCount() == 0)
+				add(Box.createRigidArea(gapSize));
 		}
 
 		@Override
