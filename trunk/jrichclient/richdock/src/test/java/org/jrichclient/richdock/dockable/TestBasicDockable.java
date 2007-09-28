@@ -44,6 +44,7 @@ public class TestBasicDockable extends DockableTester {
 		assertTrue(dockable.isDragable());
 		assertTrue(dockable.isFloatable());
 		assertNull(dockable.getDockingPort());
+		assertNotNull(dockable.getComponent());
 		assertTrue(dockable.canClose());
 		assertFalse(dockable.isDisposed());
 	}
@@ -61,6 +62,7 @@ public class TestBasicDockable extends DockableTester {
 		assertTrue(dockable.isDragable());
 		assertTrue(dockable.isFloatable());
 		assertNull(dockable.getDockingPort());
+		assertNotNull(dockable.getComponent());
 		assertTrue(dockable.canClose());
 		assertFalse(dockable.isDisposed());
 		testDispose(dockable);
@@ -80,6 +82,7 @@ public class TestBasicDockable extends DockableTester {
 		assertTrue(dockable.isDragable());
 		assertTrue(dockable.isFloatable());
 		assertNull(dockable.getDockingPort());
+		assertNotNull(dockable.getComponent());
 		assertTrue(dockable.canClose());
 		assertFalse(dockable.isDisposed());
 		testDispose(dockable);
@@ -100,6 +103,7 @@ public class TestBasicDockable extends DockableTester {
 		assertTrue(dockable.isDragable());
 		assertTrue(dockable.isFloatable());
 		assertNull(dockable.getDockingPort());
+		assertNotNull(dockable.getComponent());
 		assertTrue(dockable.canClose());
 		assertFalse(dockable.isDisposed());
 		testDispose(dockable);
@@ -121,6 +125,7 @@ public class TestBasicDockable extends DockableTester {
 		assertTrue(dockable.isDragable());
 		assertTrue(dockable.isFloatable());
 		assertNull(dockable.getDockingPort());
+		assertNotNull(dockable.getComponent());
 		assertTrue(dockable.canClose());
 		assertFalse(dockable.isDisposed());
 		testDispose(dockable);
@@ -143,6 +148,7 @@ public class TestBasicDockable extends DockableTester {
 		assertTrue(dockable.isDragable());
 		assertTrue(dockable.isFloatable());
 		assertNull(dockable.getDockingPort());
+		assertNotNull(dockable.getComponent());
 		assertTrue(dockable.canClose());
 		assertFalse(dockable.isDisposed());
 		testDispose(dockable);
@@ -170,6 +176,7 @@ public class TestBasicDockable extends DockableTester {
 			assertEquals(original.isDragable(), copy.isDragable());
 			assertEquals(original.isFloatable(), copy.isFloatable());
 			assertEquals(original.getDockingPort(), copy.getDockingPort());
+			assertNotNull(copy.getComponent());
 			assertFalse(copy.isDisposed());
 			
 			original.dispose();
@@ -204,14 +211,7 @@ public class TestBasicDockable extends DockableTester {
 		dockable.removePropertyChangeListener(BasicDockable.PROPERTYNAME_CONTENT, listener);
 		verify(listener);
 	}
-	
-// CanClose ********************************************************************
-	
-	@Test
-	public void canClose() {
-		assertTrue(dockable.canClose());
-	}
-	
+		
 	// Allow the test to be run with JUnit 3 test runners
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(TestBasicDockable.class);

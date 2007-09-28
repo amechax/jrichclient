@@ -52,6 +52,14 @@ public class ToolBarDockable extends JToolBar implements Dockable {
 		helper.setIconFile(fileName);
 	}
 	
+// ToolTipText *****************************************************************
+	
+	@Override
+	public void setToolTipText(String toolTipText) {
+		super.setToolTipText(toolTipText);
+		helper.setToolTipText(toolTipText);
+	}
+	
 // PopupMenu *******************************************************************
 
 	public JPopupMenu getPopupMenu() {
@@ -116,10 +124,5 @@ public class ToolBarDockable extends JToolBar implements Dockable {
 
 	public void dispose() {
 		helper.dispose();
-	}
-	
-	@Override
-	public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-		super.firePropertyChange(propertyName, oldValue, newValue);
 	}
 }
