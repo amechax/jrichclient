@@ -2,6 +2,7 @@ package org.jrichclient.richdock.dockable;
 
 import static org.junit.Assert.*;
 
+import javax.swing.JButton;
 import javax.swing.JPopupMenu;
 
 import junit.framework.JUnit4TestAdapter;
@@ -67,8 +68,12 @@ public class TestToolBarDockable extends DockableTester {
 			original.setIconFile(ImageResources.GLOBE_IMAGE);
 			original.setToolTipText("Test ToolTip Text");
 			original.setPopupMenu(new JPopupMenu());
+			original.add(createToolBarButton(ImageResources.GLOBE_IMAGE));
+			original.addSeparator();
+			int compCount = original.getComponentCount();
 			
 			ToolBarDockable copy = original.clone();
+			assertEquals(compCount, copy.getComponentCount());
 			assertEquals(original.getTitle(), copy.getTitle());
 			assertEquals(original.getIconFile(), copy.getIconFile());
 			assertEquals(original.getToolTipText(), copy.getToolTipText());
@@ -84,6 +89,10 @@ public class TestToolBarDockable extends DockableTester {
 		} catch (CloneNotSupportedException ex) {
 			fail("Clone not supported");
 		}
+	}
+	
+	private static JButton createToolBarButton(String fileName) {
+		return new JButton(ImageResources.createIcon(ImageResources.IMAGE_DIR + fileName));
 	}
 		
 	// Allow the test to be run with JUnit 3 test runners
