@@ -21,6 +21,8 @@ package org.jrichclient.richdock.dockable;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Point;
 
 import javax.swing.JPopupMenu;
 
@@ -97,6 +99,24 @@ public class BasicDockable extends Container implements Dockable {
 		firePropertyChange(PROPERTYNAME_CONTENT, oldContent, getContent());
 	}
 	
+// Size ************************************************************************
+	
+	@Override
+	public void setSize(Dimension size) {
+		Dimension oldSize = getSize();
+		super.setSize(size);
+		firePropertyChange(PROPERTYNAME_SIZE, oldSize, size);
+	}
+	
+// Location ********************************************************************
+	
+	@Override
+	public void setLocation(Point location) {
+		Point oldLocation = getLocation();
+		super.setLocation(location);
+		firePropertyChange(PROPERTYNAME_LOCATION, oldLocation, location);
+	}
+
 // Title ***********************************************************************
 
 	public String getTitle() {
@@ -173,6 +193,21 @@ public class BasicDockable extends Container implements Dockable {
 		return this;
 	}
 	
+// BasicDockableHelper *********************************************************
+	
+	private class BasicDockableHelper extends DockableHelper {
+		
+		public BasicDockableHelper(String title, String iconFile, 
+				String toolTipText, JPopupMenu popupMenu) {
+			super(BasicDockable.this, title, iconFile, toolTipText, popupMenu);
+		}
+		
+		@Override
+		public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+			BasicDockable.this.firePropertyChange(propertyName, oldValue, newValue);
+		}
+	}
+
 // CanClose ********************************************************************
 
 	public boolean canClose() {
@@ -187,20 +222,5 @@ public class BasicDockable extends Container implements Dockable {
 	
 	public void dispose() {
 		helper.dispose();
-	}
-	
-// BasicDockableHelper *********************************************************
-	
-	private class BasicDockableHelper extends DockableHelper {
-		
-		public BasicDockableHelper(String title, String iconFile, 
-				String toolTipText, JPopupMenu popupMenu) {
-			super(BasicDockable.this, title, iconFile, toolTipText, popupMenu);
-		}
-		
-		@Override
-		public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-			BasicDockable.this.firePropertyChange(propertyName, oldValue, newValue);
-		}
 	}
 }

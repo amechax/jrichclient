@@ -22,6 +22,7 @@ import java.awt.Component;
 import java.awt.dnd.DropTargetDropEvent;
 import java.util.Iterator;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
@@ -47,6 +48,7 @@ public class ScrollPaneDockingPort extends JScrollPane implements DockingPort<St
 	public ScrollPaneDockingPort() {
 		helper = new ScrollPaneHelper();
 		dropHelper = new ScrollPaneDropHelper(this);
+		setBorder(BorderFactory.createEmptyBorder());
 	}
 		
 // Clone ***********************************************************************

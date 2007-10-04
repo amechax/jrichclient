@@ -39,6 +39,7 @@ import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
 
 import org.jrichclient.richdock.Dockable;
+import org.jrichclient.richdock.DockingManager;
 import org.jrichclient.richdock.dockingport.FrameDockingPort;
 import org.jrichclient.richdock.dockingport.TabbedPaneDockingPort;
 
@@ -134,7 +135,8 @@ public class DragHelper extends DragSourceAdapter implements
 		else framePort.setSize(frameSize);
 		
 		framePort.setLocation(location);
-		framePort.setVisible(true);
+		DockingManager.getDesktopDockingPort().dock(framePort, 0);
+		// framePort.setVisible(true);
 		
 		return framePort;
 	}

@@ -67,8 +67,8 @@ public class DockingPortTester<T> extends DockableTester {
 		assertEquals(count + 1, dockingPort.getDockableCount());
 		
 		assertEquals(dockingPort, testDockable.getDockingPort());
-		assertEquals(location, dockingPort.getLocation(testDockable));
 		assertEquals(testDockable, dockingPort.getDockable(location));
+		assertEquals(location, dockingPort.getLocation(testDockable));
 		
 		boolean found = false;
 		for (Dockable d : dockingPort) {

@@ -17,11 +17,13 @@ import org.junit.runners.Suite;
 	TestDesktopPaneDockingPort.class,
 	TestViewDockingPort.class,
 	TestTabbedPaneDockingPort.class,
-	TestScrollArrowDockingPort.class
+	TestScrollArrowDockingPort.class,
+	TestDesktopDockingPort.class
 })
 public class RunAll {
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.jrichclient.richdock.dockingport");
+		TestSuite suite = new TestSuite(
+			"Test for org.jrichclient.richdock.dockingport");
 		
 		//$JUnit-BEGIN$
 		suite.addTest(TestFrameDockingPort.suite());
@@ -34,6 +36,7 @@ public class RunAll {
 		suite.addTest(TestViewDockingPort.suite());
 		suite.addTest(TestTabbedPaneDockingPort.suite());
 		suite.addTest(TestScrollArrowDockingPort.suite());
+		suite.addTest(TestDesktopDockingPort.suite());
 		//$JUnit-END$
 		
 		return suite;

@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
 import org.jrichclient.richdock.Dockable;
+import org.jrichclient.richdock.DockingManager;
 import org.jrichclient.richdock.dockable.BasicDockable;
 import org.jrichclient.richdock.dockable.ToolBarDockable;
 import org.jrichclient.richdock.dockingport.*;
@@ -56,7 +57,8 @@ public final class BasicDemo {
 		frameDockingPort.dock(borderPort, FrameDockingPort.LOCATIONNAME_CONTENT);
 		frameDockingPort.setSize(640, 480);
 		frameDockingPort.setLocationByPlatform(true);
-		frameDockingPort.setVisible(true);
+		
+		DockingManager.getDesktopDockingPort().dock(frameDockingPort, 0);
 	}
 
 	private static Dockable createTestDockable(String title) {
