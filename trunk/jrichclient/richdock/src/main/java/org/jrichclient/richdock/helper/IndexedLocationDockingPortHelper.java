@@ -123,6 +123,7 @@ public abstract class IndexedLocationDockingPortHelper extends DockingPortHelper
 	
 	public Integer getLocation(Dockable dockable) {
 		checkInvariants();
+		
 		int index = dockableList.indexOf(dockable);
 		return index == -1 ? null : index;
 	}

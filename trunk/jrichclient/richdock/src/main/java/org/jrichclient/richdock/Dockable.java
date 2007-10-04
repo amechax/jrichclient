@@ -19,6 +19,8 @@
 package org.jrichclient.richdock;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
 
 import javax.swing.JPopupMenu;
 /**
@@ -46,6 +48,16 @@ import javax.swing.JPopupMenu;
  * @author Bruce Alspaugh
  */
 public interface Dockable extends PropertyChangeBroadcaster, Cloneable {
+	/**
+	 * Bound property name for size.
+	 */
+	public static final String PROPERTYNAME_SIZE = "size";
+	
+	/**
+	 * Bound property name for location.
+	 */
+	public static final String PROPERTYNAME_LOCATION = "location";
+	
 	/**
 	 * Bound property name for title.
 	 */
@@ -81,6 +93,7 @@ public interface Dockable extends PropertyChangeBroadcaster, Cloneable {
 	 */
 	
 	public static final String PROPERTYNAME_DOCKING_PORT = "dockingPort";
+	
 	/**
 	 * Bound property name for disposed.
 	 */
@@ -95,6 +108,34 @@ public interface Dockable extends PropertyChangeBroadcaster, Cloneable {
 	 * @throws CloneNotSupportedException
 	 */
 	public Dockable clone() throws CloneNotSupportedException;
+	
+	/**
+	 * Returns the size of the Dockable.
+	 * 
+	 * @return size
+	 */
+	public Dimension getSize();
+	
+	/**
+	 * Sets the size of the Dockable.
+	 * 
+	 * @param size
+	 */
+	public void setSize(Dimension size);
+	
+	/**
+	 * Returns the location of the Dockable.
+	 * 
+	 * @return dockable
+	 */
+	public Point getLocation();
+	
+	/**
+	 * Sets the location of the Dockable.
+	 * 
+	 * @param location
+	 */
+	public void setLocation(Point location);
 	
 	/**
 	 * Returns the title of the <code>Dockable</code>.
@@ -155,8 +196,8 @@ public interface Dockable extends PropertyChangeBroadcaster, Cloneable {
 	public JPopupMenu getPopupMenu();
 	
 	/**
-	 * Sets the popup menu and fires a <code>PropertyChangeEvent</code> if it is
-	 * different from its previous value.
+	 * Sets the popup menu and fires a <code>PropertyChangeEvent</code> if it 
+	 * is different from its previous value.
 	 * 
 	 * @param popupMenu
 	 */

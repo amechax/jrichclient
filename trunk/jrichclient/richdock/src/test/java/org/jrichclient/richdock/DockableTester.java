@@ -3,8 +3,7 @@ package org.jrichclient.richdock;
 import static org.jrichclient.richdock.UnitTestUtils.*;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -23,7 +22,7 @@ public class DockableTester {
 	public DockableTester(Dockable dockable) {
 		this.dockable = dockable;
 	}
-	
+		
 // Title ***********************************************************************
 	
 	@Test

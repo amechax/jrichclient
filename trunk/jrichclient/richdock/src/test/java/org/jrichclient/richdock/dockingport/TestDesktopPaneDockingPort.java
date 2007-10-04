@@ -166,7 +166,7 @@ public class TestDesktopPaneDockingPort extends DockingPortTester<Integer> {
 	
 	@Test
 	public void testDockUndock() {
-		testDockUndock(Integer.valueOf(0), createTestDockable("Dockable 0"));
+		testDockUndock(0, createTestDockable("Dockable 0"));
 	}
 	
 	private Dockable createTestDockable(String title) {
