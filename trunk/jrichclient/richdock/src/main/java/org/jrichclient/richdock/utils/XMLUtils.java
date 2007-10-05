@@ -23,6 +23,12 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
+import org.jrichclient.richdock.DockingManager;
+import org.jrichclient.richdock.DockingPort;
 
 public class XMLUtils {
 // JavaBeans persistance *******************************************************
@@ -65,6 +71,28 @@ public class XMLUtils {
 	public static Object duplicate(Object object, boolean noisy) {
 		byte[] momento = encodeObject(object, noisy);
 		return decodeObject(momento, noisy);
+	}
+	
+	public static void saveDesktop(final boolean noisy) {
+		String fileName = 
+			System.getProperty("user.dir") + File.separator + "richdock.txt";
+		File file = new File(fileName);
+		
+		try {
+			XMLEncoder encoder = new XMLEncoder(new FileOutputStream(file));
+			encoder.setExceptionListener(new ExceptionListener() {
+				public void exceptionThrown(Exception ex) {
+					if (noisy)
+						ex.printStackTrace();
+				}
+			});
+			
+			DockingPort<Integer> desktop = DockingManager.getDesktopDockingPort();
+			encoder.writeObject(desktop);
+			encoder.close();
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 }

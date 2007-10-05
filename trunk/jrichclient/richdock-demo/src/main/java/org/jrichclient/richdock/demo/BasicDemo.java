@@ -5,6 +5,7 @@ import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 import org.jrichclient.richdock.Dockable;
@@ -26,7 +27,7 @@ public final class BasicDemo {
 		DesktopPaneDockingPort desktopPort = new DesktopPaneDockingPort();
 		desktopPort.dock(createInternalDockable("Test Dockable 1"), 0);
 		desktopPort.dock(createInternalDockable("Test Dockable 2"), 1);
-		desktopPort.setPreferredSize(new Dimension(400, 250));
+		desktopPort.getComponent().setPreferredSize(new Dimension(400, 250));
 		
 		MultiSplitDockingPort multiSplitPort = 
 			new MultiSplitDockingPort(new DefaultSplitPaneModel(), 
@@ -98,27 +99,27 @@ public final class BasicDemo {
 		tabbedPort.setDropable(true);
 		
 		tabbedPort.dock(SystemProperties.createSystemPropertiesDockable(), 0);
-		tabbedPort.dock(ConsoleFactory.createErrorConsole(), 0);
-		tabbedPort.dock(ConsoleFactory.createOutputConsole(), 0);
+		//tabbedPort.dock(ConsoleFactory.createErrorConsole(), 0);
+		//tabbedPort.dock(ConsoleFactory.createOutputConsole(), 0);
 		tabbedPort.dock(ProjectDockable.createProjectDockableView(), 0);
 		
 		return tabbedPort;
 	}
 	
 	private static Dockable createToolBar() {
-		ToolBarDockable dockable = new ToolBarDockable("Toolbar");
-		dockable.add(createToolBarButton("save.gif"));
-		dockable.add(createToolBarButton("refresh.gif"));
-		dockable.addSeparator();
-		dockable.add(createToolBarButton("first.gif"));
-		dockable.add(createToolBarButton("previous.gif"));
-		dockable.add(createToolBarButton("next.gif"));
-		dockable.add(createToolBarButton("last.gif"));
-		dockable.addSeparator();
-		dockable.add(createToolBarButton("add.gif"));
-		dockable.add(createToolBarButton("remove.gif"));
-		dockable.setRollover(true);
-		return dockable;
+		JToolBar toolBar = new JToolBar("Toolbar");
+		toolBar.add(createToolBarButton("save.gif"));
+		toolBar.add(createToolBarButton("refresh.gif"));
+		toolBar.addSeparator();
+		toolBar.add(createToolBarButton("first.gif"));
+		toolBar.add(createToolBarButton("previous.gif"));
+		toolBar.add(createToolBarButton("next.gif"));
+		toolBar.add(createToolBarButton("last.gif"));
+		toolBar.addSeparator();
+		toolBar.add(createToolBarButton("add.gif"));
+		toolBar.add(createToolBarButton("remove.gif"));
+		toolBar.setRollover(true);
+		return new ToolBarDockable(toolBar);
 	}
 	
 	private static JButton createToolBarButton(String fileName) {

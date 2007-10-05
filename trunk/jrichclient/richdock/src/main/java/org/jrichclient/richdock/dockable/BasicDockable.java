@@ -21,8 +21,6 @@ package org.jrichclient.richdock.dockable;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Point;
 
 import javax.swing.JPopupMenu;
 
@@ -98,25 +96,7 @@ public class BasicDockable extends Container implements Dockable {
 		
 		firePropertyChange(PROPERTYNAME_CONTENT, oldContent, getContent());
 	}
-	
-// Size ************************************************************************
-	
-	@Override
-	public void setSize(Dimension size) {
-		Dimension oldSize = getSize();
-		super.setSize(size);
-		firePropertyChange(PROPERTYNAME_SIZE, oldSize, size);
-	}
-	
-// Location ********************************************************************
-	
-	@Override
-	public void setLocation(Point location) {
-		Point oldLocation = getLocation();
-		super.setLocation(location);
-		firePropertyChange(PROPERTYNAME_LOCATION, oldLocation, location);
-	}
-
+		
 // Title ***********************************************************************
 
 	public String getTitle() {

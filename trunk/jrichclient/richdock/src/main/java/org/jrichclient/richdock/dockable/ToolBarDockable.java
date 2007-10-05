@@ -18,29 +18,29 @@
  */
 package org.jrichclient.richdock.dockable;
 
-import java.awt.Component;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
+import javax.swing.event.SwingPropertyChangeSupport;
 
 import org.jrichclient.richdock.Dockable;
 import org.jrichclient.richdock.DockingPort;
 import org.jrichclient.richdock.helper.DockableHelper;
 import org.jrichclient.richdock.utils.XMLUtils;
 
-@SuppressWarnings("serial")
-public class ToolBarDockable extends JToolBar implements Dockable {
+public class ToolBarDockable implements Dockable {
+	private final JToolBar toolBar;
+	private final PropertyChangeSupport pcs;
 	private final DockableHelper helper;
 	
 // Constructors ****************************************************************
-	
-	public ToolBarDockable() {
-		this("");
-	}
-	
-	public ToolBarDockable(String title) {
-		super(title);
-		helper = new ToolBarDockableHelper(this, title);
+		
+	public ToolBarDockable(JToolBar toolBar) {
+		this.toolBar = toolBar;
+		this.helper = new ToolBarDockableHelper(this, toolBar.getName());
+		pcs = new SwingPropertyChangeSupport(this);
 	}
 	
 // Clone ***********************************************************************
@@ -50,6 +50,33 @@ public class ToolBarDockable extends JToolBar implements Dockable {
 		return (ToolBarDockable)XMLUtils.duplicate(this, false);
 	}
 	
+// PropertyChangeBroadcaster ***************************************************
+	
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		pcs.addPropertyChangeListener(listener);
+	}
+
+	public void addPropertyChangeListener(String propertyName,
+			PropertyChangeListener listener) {
+		pcs.addPropertyChangeListener(propertyName, listener);
+	}
+
+	public PropertyChangeListener[] getPropertyChangeListeners() {
+		return pcs.getPropertyChangeListeners();
+	}
+
+	public PropertyChangeListener[] getPropertyChangeListeners(String propertyName) {
+		return pcs.getPropertyChangeListeners();
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		pcs.removePropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		pcs.removePropertyChangeListener(propertyName, listener);
+	}
+	
 // Title ***********************************************************************
 
 	public String getTitle() {
@@ -57,6 +84,7 @@ public class ToolBarDockable extends JToolBar implements Dockable {
 	}
 
 	public void setTitle(String title) {
+		toolBar.setName(title);
 		helper.setTitle(title);
 	}
 	
@@ -72,9 +100,12 @@ public class ToolBarDockable extends JToolBar implements Dockable {
 	
 // ToolTipText *****************************************************************
 	
-	@Override
+	public String getToolTipText() {
+		return helper.getToolTipText();
+	}
+
 	public void setToolTipText(String toolTipText) {
-		super.setToolTipText(toolTipText);
+		toolBar.setToolTipText(toolTipText);
 		helper.setToolTipText(toolTipText);
 	}
 	
@@ -98,6 +129,18 @@ public class ToolBarDockable extends JToolBar implements Dockable {
 		helper.setDragable(dragable);
 	}
 	
+// Floatable *******************************************************************
+	
+	public boolean isFloatable() {
+		return helper.isFloatable();
+	}
+
+	public void setFloatable(boolean floatable) {
+		toolBar.setFloatable(floatable);
+		helper.setFloatable(floatable);
+	}
+
+	
 // DockingPort *****************************************************************
 	
 	public DockingPort<?> getDockingPort() {
@@ -110,8 +153,8 @@ public class ToolBarDockable extends JToolBar implements Dockable {
 	
 // Component *******************************************************************
 	
-	public Component getComponent() {
-		return this;
+	public JToolBar getComponent() {
+		return toolBar;
 	}
 	
 // ToolBarDockableHelper *******************************************************
@@ -124,7 +167,7 @@ public class ToolBarDockable extends JToolBar implements Dockable {
 		@Override
 		protected void firePropertyChange(String propertyName, 
 				Object oldValue, Object newValue) {
-			ToolBarDockable.this.firePropertyChange(propertyName, oldValue, newValue);
+			pcs.firePropertyChange(propertyName, oldValue, newValue);
 		}
 	}
 

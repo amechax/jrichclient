@@ -23,6 +23,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.dnd.DropTargetDropEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.beans.PropertyVetoException;
 import java.util.Iterator;
 
@@ -30,6 +32,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JPopupMenu;
+import javax.swing.event.SwingPropertyChangeSupport;
 
 import org.jrichclient.richdock.Dockable;
 import org.jrichclient.richdock.DockingPort;
@@ -37,48 +40,64 @@ import org.jrichclient.richdock.helper.DropHelper;
 import org.jrichclient.richdock.helper.IndexedLocationDockingPortHelper;
 import org.jrichclient.richdock.utils.XMLUtils;
 
-@SuppressWarnings("serial")
-public class DesktopPaneDockingPort extends JDesktopPane implements DockingPort<Integer> {
+public class DesktopPaneDockingPort implements DockingPort<Integer> {
 
 // Private fields **************************************************************
 	
 	private static final int X_OFFSET = 30;
 	private static final int Y_OFFSET = 30;
+	private final PropertyChangeSupport pcs;
+	private final JDesktopPane desktopPane;
 	private final DesktopPaneHelper helper;
 	private final DesktopPaneDropHelper dropHelper;
 		
 // Constructors ****************************************************************
 	
 	public DesktopPaneDockingPort() {
-		this("", null, null, null);
+		this(new JDesktopPane());
 	}
 	
-	public DesktopPaneDockingPort(String title) {
-		this(title, null, null, null);
-	}
-	
-	public DesktopPaneDockingPort(String title, String iconFile) {
-		this(title, iconFile, null, null);
-	}
-	
-	public DesktopPaneDockingPort(String title, String iconFile, String toolTipText) {
-		this(title, iconFile, toolTipText, null);
-	}
-	
-	public DesktopPaneDockingPort(String title, String iconFile, String toolTipText, JPopupMenu popupMenu) {
-		helper = new DesktopPaneHelper(title, iconFile, toolTipText, popupMenu);
-		setToolTipText(toolTipText);
-		addMouseListener(helper.getPopupMouseListener());
+	public DesktopPaneDockingPort(JDesktopPane desktopPane) {
+		pcs = new SwingPropertyChangeSupport(this);
+		this.desktopPane = desktopPane;
+		helper = new DesktopPaneHelper();
+		desktopPane.addMouseListener(helper.getPopupMouseListener());
 		
-		dropHelper = new DesktopPaneDropHelper(this);
+		dropHelper = new DesktopPaneDropHelper(desktopPane);
 		dropHelper.setDropable(true);
 	}
-
+	
 // Clone ***********************************************************************
 	
 	@Override
 	public DesktopPaneDockingPort clone() throws CloneNotSupportedException {
-		return (DesktopPaneDockingPort)XMLUtils.duplicate(this, false);
+		return (DesktopPaneDockingPort)XMLUtils.duplicate(this, true);
+	}
+	
+// PropertyChangeBroadcaster ***************************************************
+	
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		pcs.addPropertyChangeListener(listener);
+	}
+
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		pcs.addPropertyChangeListener(propertyName, listener);
+	}
+
+	public PropertyChangeListener[] getPropertyChangeListeners() {
+		return pcs.getPropertyChangeListeners();
+	}
+
+	public PropertyChangeListener[] getPropertyChangeListeners(String propertyName) {
+		return pcs.getPropertyChangeListeners(propertyName);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		pcs.removePropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		pcs.removePropertyChangeListener(propertyName, listener);
 	}
 	
 // Title ***********************************************************************
@@ -103,10 +122,12 @@ public class DesktopPaneDockingPort extends JDesktopPane implements DockingPort<
 	
 // ToolTipText *****************************************************************
 	
-	@Override
+	public String getToolTipText() {
+		return helper.getToolTipText();
+	}
+
 	public void setToolTipText(String toolTipText) {
-		super.setToolTipText(toolTipText);
-		
+		desktopPane.setToolTipText(toolTipText);
 		helper.setToolTipText(toolTipText);
 	}
 	
@@ -163,7 +184,7 @@ public class DesktopPaneDockingPort extends JDesktopPane implements DockingPort<
 // Component *******************************************************************
 	
 	public JDesktopPane getComponent() {
-		return this;
+		return desktopPane;
 	}
 
 // Dock/Undock *****************************************************************
@@ -198,9 +219,8 @@ public class DesktopPaneDockingPort extends JDesktopPane implements DockingPort<
 	
 	private class DesktopPaneHelper extends IndexedLocationDockingPortHelper {
 		
-		public DesktopPaneHelper(String title, String iconFile, 
-				String toolTipText, JPopupMenu popupMenu) {
-			super(DesktopPaneDockingPort.this, title, iconFile, toolTipText, popupMenu);
+		public DesktopPaneHelper() {
+			super(DesktopPaneDockingPort.this);
 		}
 
 		@Override
@@ -216,14 +236,14 @@ public class DesktopPaneDockingPort extends JDesktopPane implements DockingPort<
 			boolean minimized = frame.isIcon();
 
 			Dimension frameSize = frame.getSize();
-			if (frameSize.width == 0 || frameSize.height == 0)
+			if (frameSize.width < 10 || frameSize.height < 10)
 				frame.pack();
-				
+			
 			Point frameLocation = frame.getLocation();
 			if (frameLocation.x == 0 && frameLocation.y == 0)
 				frame.setLocation(location * X_OFFSET, location * Y_OFFSET);
 				
-			add(frame);
+			desktopPane.add(frame, location.intValue());
 			frame.setVisible(true);
 				
 			try {
@@ -231,20 +251,20 @@ public class DesktopPaneDockingPort extends JDesktopPane implements DockingPort<
 				frame.setIcon(minimized);
 			} catch (PropertyVetoException ex) { } //NOPMD
 				
-			validate();
+			desktopPane.validate();
 		}
 
 		@Override
 		protected void uninstall(Dockable dockable, Integer location) {
 			JInternalFrame frame = (JInternalFrame)dockable.getComponent();
 			frame.setVisible(false);
-			remove(frame);
-			validate();
+			desktopPane.remove(frame);
+			desktopPane.validate();
 		}
 
 		@Override
 		protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-			DesktopPaneDockingPort.this.firePropertyChange(propertyName, oldValue, newValue);
+			pcs.firePropertyChange(propertyName, oldValue, newValue);
 		}
 	}
 	
@@ -259,7 +279,8 @@ public class DesktopPaneDockingPort extends JDesktopPane implements DockingPort<
 		@Override
 		protected boolean dropDockable(Dockable dockable, DropTargetDropEvent event) {
 			BorderLayoutDockingPort borderPort = new BorderLayoutDockingPort();
-			borderPort.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			borderPort.getComponent().setBorder(
+				BorderFactory.createEmptyBorder(5, 5, 5, 5));
 			borderPort.setDisposeOnEmpty(true);
 			borderPort.dock(dockable, BorderLayout.CENTER);
 			
@@ -276,9 +297,8 @@ public class DesktopPaneDockingPort extends JDesktopPane implements DockingPort<
 
 		@Override
 		protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-			DesktopPaneDockingPort.this.firePropertyChange(propertyName, oldValue, newValue);
+			pcs.firePropertyChange(propertyName, oldValue, newValue);
 		}
-		
 	}
 	
 // CanClose ********************************************************************

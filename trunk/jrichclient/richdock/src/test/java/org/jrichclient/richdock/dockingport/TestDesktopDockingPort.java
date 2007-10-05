@@ -32,8 +32,6 @@ public class TestDesktopDockingPort extends DockingPortTester<Integer> {
 	
 	@Test
 	public void testConstructor() {
-		assertNull(dockingPort.getSize());
-		assertNull(dockingPort.getLocation());
 		assertEquals("", dockingPort.getTitle());
 		assertNull(dockingPort.getIconFile());
 		assertNull(dockingPort.getToolTipText());
@@ -123,7 +121,7 @@ public class TestDesktopDockingPort extends DockingPortTester<Integer> {
 			DesktopDockingPort.PROPERTYNAME_EXIT_ON_DISPOSE, listener);
 		verify(listener);
 	}
-	
+		
 	// Allow the test to be run with JUnit 3 test runners
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(TestDesktopDockingPort.class);

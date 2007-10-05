@@ -124,7 +124,7 @@ public final class ViewDockingPort extends JPanel implements DockingPort<String>
 	public ViewDockingPort clone() throws CloneNotSupportedException {
 		return (ViewDockingPort)XMLUtils.duplicate(this, false);
 	}
-	
+		
 // Title ***********************************************************************
 	
 	public String getTitle() {

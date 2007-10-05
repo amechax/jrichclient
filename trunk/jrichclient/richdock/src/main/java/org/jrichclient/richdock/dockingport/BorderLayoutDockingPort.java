@@ -22,10 +22,13 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.dnd.DropTargetDropEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Iterator;
 
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.event.SwingPropertyChangeSupport;
 
 import org.jrichclient.richdock.Dockable;
 import org.jrichclient.richdock.DockingPort;
@@ -33,8 +36,7 @@ import org.jrichclient.richdock.helper.NamedLocationDockingPortHelper;
 import org.jrichclient.richdock.helper.NamedLocationDropHelper;
 import org.jrichclient.richdock.utils.XMLUtils;
 
-@SuppressWarnings("serial")
-public class BorderLayoutDockingPort extends JPanel implements DockingPort<String> {
+public class BorderLayoutDockingPort implements DockingPort<String> {
 // Property names **************************************************************
 	
 	public static final String PROPERTYNAME_HGAP = "hgap";
@@ -42,20 +44,23 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 	
 // Private fields **************************************************************
 	
+	private final PropertyChangeSupport pcs;
 	private final BorderLayout layout;
+	private final JPanel panel;
 	private final BorderLayoutHelper helper;
 	private final BorderLayoutDropHelper dropHelper;
 		
 // Constructors ****************************************************************
 	
 	public BorderLayoutDockingPort() {
+		pcs = new SwingPropertyChangeSupport(this);
 		layout = new BorderLayout();
-		setLayout(layout);
+		panel = new JPanel(layout);
 		
 		helper = new BorderLayoutHelper();
-		addMouseListener(helper.getPopupMouseListener());
+		panel.addMouseListener(helper.getPopupMouseListener());
 		
-		dropHelper = new BorderLayoutDropHelper(this);
+		dropHelper = new BorderLayoutDropHelper(panel);
 	}
 		
 // Clone ***********************************************************************
@@ -63,6 +68,32 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 	@Override
 	public BorderLayoutDockingPort clone() throws CloneNotSupportedException {
 		return (BorderLayoutDockingPort)XMLUtils.duplicate(this, false);
+	}
+	
+// PropertyChangeBroadcaster ***************************************************
+	
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		pcs.addPropertyChangeListener(listener);
+	}
+
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		pcs.addPropertyChangeListener(propertyName, listener);
+	}
+
+	public PropertyChangeListener[] getPropertyChangeListeners() {
+		return pcs.getPropertyChangeListeners();
+	}
+
+	public PropertyChangeListener[] getPropertyChangeListeners(String propertyName) {
+		return pcs.getPropertyChangeListeners(propertyName);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		pcs.removePropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		pcs.removePropertyChangeListener(propertyName, listener);
 	}
 	
 // Hgap ************************************************************************
@@ -74,7 +105,7 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 	public void setHgap(int hgap) {
 		int oldHgap = getHgap();
 		layout.setHgap(hgap);
-		firePropertyChange(PROPERTYNAME_HGAP, oldHgap, getHgap());
+		pcs.firePropertyChange(PROPERTYNAME_HGAP, oldHgap, getHgap());
 	}
 	
 // VGap ************************************************************************
@@ -86,7 +117,7 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 	public void setVgap(int vgap) {
 		int oldVgap = getVgap();
 		layout.setVgap(vgap);
-		firePropertyChange(PROPERTYNAME_VGAP, oldVgap, getVgap());
+		pcs.firePropertyChange(PROPERTYNAME_VGAP, oldVgap, getVgap());
 	}
 	
 // Title ***********************************************************************
@@ -172,7 +203,7 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 // Component *******************************************************************
 	
 	public JPanel getComponent() {
-		return this;
+		return panel;
 	}
 
 // Dock/Undock *****************************************************************
@@ -215,10 +246,10 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 		protected void install(Dockable dockable, String location) {
 			Component oldComponent = layout.getLayoutComponent(location);
 			if (oldComponent != null)
-				remove(oldComponent);
+				panel.remove(oldComponent);
 			
-			add(dockable.getComponent(), location);
-			validate();
+			panel.add(dockable.getComponent(), location);
+			panel.validate();
 			
 			if (BorderLayout.CENTER.equals(location)) {
 				setTitle(dockable.getTitle());
@@ -231,8 +262,8 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 
 		@Override
 		protected void uninstall(Dockable dockable, String location) {
-			remove(dockable.getComponent());
-			validate();
+			panel.remove(dockable.getComponent());
+			panel.validate();
 			
 			if (BorderLayout.CENTER.equals(location)) {
 				dockable.removePropertyChangeListener(helper.getDockableListener());
@@ -245,7 +276,7 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 
 		@Override
 		protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-			BorderLayoutDockingPort.this.firePropertyChange(propertyName, oldValue, newValue);
+			pcs.firePropertyChange(propertyName, oldValue, newValue);
 		}
 	}
 	
@@ -268,7 +299,7 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 		}
 		
 		private String getDropLocation(Point point) {
-			Component comp = getComponentAt(point);
+			Component comp = panel.getComponentAt(point);
 			if (comp == null)
 				return BorderLayout.CENTER;
 			
@@ -277,7 +308,7 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 
 		@Override
 		protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-			BorderLayoutDockingPort.this.firePropertyChange(propertyName, oldValue, newValue);
+			pcs.firePropertyChange(propertyName, oldValue, newValue);
 		}
 	}
 	
@@ -305,7 +336,7 @@ public class BorderLayoutDockingPort extends JPanel implements DockingPort<Strin
 
 	public void dispose() {
 		dropHelper.dispose();
-		removeMouseListener(helper.getPopupMouseListener());
+		panel.removeMouseListener(helper.getPopupMouseListener());
 		helper.dispose();
 	}
 }
