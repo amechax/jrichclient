@@ -65,15 +65,7 @@ public class PropertyDescriptorFactory {
 	
 	public static void addDockablePropertyDescriptors(
 			List<PropertyDescriptor> descriptorList, Class<?> beanClass) {
-		
-		descriptorList.add(createPropertyDescriptor(beanClass,
-			"size", "getSize", "setSize",
-			BOUND, NOT_CONSTRAINED, NOT_TRANSIENT));
-		
-		descriptorList.add(createPropertyDescriptor(beanClass,
-			"location", "getLocation", "setLocation",
-			BOUND, NOT_CONSTRAINED, NOT_TRANSIENT));
-		
+				
 		descriptorList.add(createPropertyDescriptor(beanClass, 
 			Dockable.PROPERTYNAME_TITLE, "getTitle", "setTitle", 
 			BOUND, NOT_CONSTRAINED, NOT_TRANSIENT));

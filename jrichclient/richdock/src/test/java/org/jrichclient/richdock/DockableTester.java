@@ -22,7 +22,7 @@ public class DockableTester {
 	public DockableTester(Dockable dockable) {
 		this.dockable = dockable;
 	}
-		
+			
 // Title ***********************************************************************
 	
 	@Test

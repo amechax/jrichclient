@@ -2,8 +2,8 @@ package org.jrichclient.richdock.dockable;
 
 import static org.junit.Assert.*;
 
-import javax.swing.JButton;
 import javax.swing.JPopupMenu;
+import javax.swing.JToolBar;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -17,7 +17,7 @@ public class TestToolBarDockable extends DockableTester {
 // Constructors ****************************************************************
 	
 	public TestToolBarDockable() {
-		this(new ToolBarDockable());
+		this(new ToolBarDockable(new JToolBar()));
 	}
 	
 	public TestToolBarDockable(ToolBarDockable dockable) {
@@ -30,7 +30,7 @@ public class TestToolBarDockable extends DockableTester {
 	
 	@Test
 	public void testConstructor1() {
-		assertEquals("", dockable.getTitle());
+		assertNull(dockable.getTitle());
 		assertNull(dockable.getIconFile());
 		assertNull(dockable.getToolTipText());
 		assertNull(dockable.getPopupMenu());
@@ -45,7 +45,9 @@ public class TestToolBarDockable extends DockableTester {
 	@Test
 	public void testConstructor2() {
 		String testTitle = "Test Dockable";
-		ToolBarDockable testDockable = new ToolBarDockable(testTitle);
+		JToolBar toolBar = new JToolBar(testTitle);
+		
+		ToolBarDockable testDockable = new ToolBarDockable(toolBar);
 		assertEquals(testTitle, testDockable.getTitle());
 		assertNull(testDockable.getIconFile());
 		assertNull(testDockable.getToolTipText());
@@ -64,16 +66,17 @@ public class TestToolBarDockable extends DockableTester {
 	public void testClone() {
 		try {
 			String testTitle = "Test ToolBar";
-			ToolBarDockable original = new ToolBarDockable(testTitle);
+			JToolBar toolBar = new JToolBar(testTitle);
+			toolBar.addSeparator();
+			int compCount = toolBar.getComponentCount();
+			
+			ToolBarDockable original = new ToolBarDockable(toolBar);
 			original.setIconFile(ImageResources.GLOBE_IMAGE);
 			original.setToolTipText("Test ToolTip Text");
 			original.setPopupMenu(new JPopupMenu());
-			original.add(createToolBarButton(ImageResources.GLOBE_IMAGE));
-			original.addSeparator();
-			int compCount = original.getComponentCount();
 			
 			ToolBarDockable copy = original.clone();
-			assertEquals(compCount, copy.getComponentCount());
+			assertEquals(compCount, copy.getComponent().getComponentCount());
 			assertEquals(original.getTitle(), copy.getTitle());
 			assertEquals(original.getIconFile(), copy.getIconFile());
 			assertEquals(original.getToolTipText(), copy.getToolTipText());
@@ -91,10 +94,6 @@ public class TestToolBarDockable extends DockableTester {
 		}
 	}
 	
-	private static JButton createToolBarButton(String fileName) {
-		return new JButton(ImageResources.createIcon(ImageResources.IMAGE_DIR + fileName));
-	}
-		
 	// Allow the test to be run with JUnit 3 test runners
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(TestToolBarDockable.class);

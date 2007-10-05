@@ -23,7 +23,6 @@ import static org.jrichclient.richdock.utils.PropertyDescriptorFactory.*;
 import java.beans.BeanDescriptor;
 import java.beans.DefaultPersistenceDelegate;
 import java.beans.Encoder;
-import java.beans.EventSetDescriptor;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
 import java.beans.PropertyDescriptor;
@@ -53,13 +52,6 @@ public class TabBarDockingPortBeanInfo extends SimpleBeanInfo {
 		return createPropertyDescriptorArray(descriptorList);
 	}
 	
-// EventSetDescriptors *********************************************************
-	
-	@Override
-	public EventSetDescriptor[] getEventSetDescriptors() {
-		return new EventSetDescriptor[] { } ;
-	}
-
 // PersistenceDelegate *********************************************************
 	
 	private static PersistenceDelegate DELEGATE = new Delegate();

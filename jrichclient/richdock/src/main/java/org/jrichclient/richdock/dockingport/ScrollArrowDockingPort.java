@@ -164,7 +164,7 @@ public class ScrollArrowDockingPort extends JPanel implements DockingPort<String
 		this.vap = vap;
 		firePropertyChange(PROPERTYNAME_VERTICAL_ARROW_POLICY, oldVap, getVerticalArrowPolicy());
 	}
-	
+		
 // Title ***********************************************************************
 	
 	public String getTitle() {

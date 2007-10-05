@@ -22,6 +22,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.dnd.DropTargetDropEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,6 +32,7 @@ import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPopupMenu;
+import javax.swing.event.SwingPropertyChangeSupport;
 
 import org.jrichclient.richdock.Dockable;
 import org.jrichclient.richdock.DockingPort;
@@ -37,19 +40,20 @@ import org.jrichclient.richdock.helper.DropHelper;
 import org.jrichclient.richdock.helper.IndexedLocationDockingPortHelper;
 import org.jrichclient.richdock.utils.XMLUtils;
 
-@SuppressWarnings("serial")
-public class TabBarDockingPort extends Box implements DockingPort<Integer> {
+public class TabBarDockingPort implements DockingPort<Integer> {
 // Bound property names ********************************************************
 	
 	public static final String PROPERTYNAME_SELECTED_DOCKABLE = "selectedDockable";
 	
 // Private instance variables **************************************************
 	
-	private Rotation rotation;
-	private Dockable selectedDockable;
+	private final PropertyChangeSupport pcs;
+	private final Rotation rotation;
+	private final Box box;
 	private final TabBarDockingPortHelper helper;
 	private final TabBarDropHelper dropHelper;
 	private final List<TabBarComponent> tabList;
+	private Dockable selectedDockable;
 
 // Constructor *****************************************************************
 	
@@ -58,12 +62,12 @@ public class TabBarDockingPort extends Box implements DockingPort<Integer> {
 	}
 		
 	public TabBarDockingPort(Rotation rotation) {
-		super(getAxis(rotation));
+		pcs = new SwingPropertyChangeSupport(this);
+		this.rotation = rotation;
+		box = new Box(getAxis(rotation));
 		
 		this.helper = new TabBarDockingPortHelper();
-		this.rotation = rotation;
-		
-		this.dropHelper = new TabBarDropHelper(this);
+		this.dropHelper = new TabBarDropHelper(box);
 		dropHelper.setDropable(true);
 		
 		tabList = new ArrayList<TabBarComponent>();
@@ -80,7 +84,33 @@ public class TabBarDockingPort extends Box implements DockingPort<Integer> {
 	
 	@Override
 	public TabBarDockingPort clone() throws CloneNotSupportedException {
-		return (TabBarDockingPort)XMLUtils.duplicate(this, false);
+		return (TabBarDockingPort)XMLUtils.duplicate(this, true);
+	}
+	
+// PropertyChangeBroadcaster ***************************************************
+	
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		pcs.addPropertyChangeListener(listener);
+	}
+
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		pcs.addPropertyChangeListener(propertyName, listener);
+	}
+
+	public PropertyChangeListener[] getPropertyChangeListeners() {
+		return pcs.getPropertyChangeListeners();
+	}
+
+	public PropertyChangeListener[] getPropertyChangeListeners(String propertyName) {
+		return pcs.getPropertyChangeListeners(propertyName);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		pcs.removePropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		pcs.removePropertyChangeListener(propertyName, listener);
 	}
 	
 // Rotation ********************************************************************
@@ -117,9 +147,10 @@ public class TabBarDockingPort extends Box implements DockingPort<Integer> {
 			setPopupMenu(null);
 		}
 		
-		firePropertyChange(PROPERTYNAME_SELECTED_DOCKABLE, oldSelectedDockable, getSelectedDockable());
+		pcs.firePropertyChange(PROPERTYNAME_SELECTED_DOCKABLE, 
+			oldSelectedDockable, getSelectedDockable());
 	}
-				
+					
 // Title ***********************************************************************
 	
 	public String getTitle() {
@@ -142,10 +173,12 @@ public class TabBarDockingPort extends Box implements DockingPort<Integer> {
 
 // ToolTipText *****************************************************************
 	
-	@Override
+	public String getToolTipText() {
+		return helper.getToolTipText();
+	}
+
 	public void setToolTipText(String toolTipText) {
-		super.setToolTipText(toolTipText);
-		
+		box.setToolTipText(toolTipText);
 		helper.setToolTipText(toolTipText);
 	}
 
@@ -202,7 +235,7 @@ public class TabBarDockingPort extends Box implements DockingPort<Integer> {
 // Component *******************************************************************
 	
 	public Box getComponent() {
-		return this;
+		return box;
 	}
 	
 // Dock/Undock *****************************************************************
@@ -247,8 +280,8 @@ public class TabBarDockingPort extends Box implements DockingPort<Integer> {
 				TabBarDockingPort.this, dockable, getRotation());
 			tabList.add(location.intValue(), comp);
 			updateLayout();
-			revalidate();
-			repaint();
+			box.revalidate();
+			box.repaint();
 		}
 
 		@Override
@@ -260,29 +293,29 @@ public class TabBarDockingPort extends Box implements DockingPort<Integer> {
 				setSelectedDockable(null);
 			
 			updateLayout();
-			revalidate();
-			repaint();
+			box.revalidate();
+			box.repaint();
 		}
 		
 		private void updateLayout() {
-			while (getComponentCount() > 0)
-				remove(getComponent(0));
+			while (box.getComponentCount() > 0)
+				box.remove(box.getComponent(0));
 
 			int count = tabList.size();
 			Dimension gapSize = new Dimension(5, 5);
 			for (int index = 0; index < count; index++) {
-				add(tabList.get(index));
+				box.add(tabList.get(index));
 				if (index < count - 1)
-					add(Box.createRigidArea(gapSize));
+					box.add(Box.createRigidArea(gapSize));
 			}
 			
-			if (getComponentCount() == 0)
-				add(Box.createRigidArea(gapSize));
+			if (box.getComponentCount() == 0)
+				box.add(Box.createRigidArea(gapSize));
 		}
 
 		@Override
 		protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-			TabBarDockingPort.this.firePropertyChange(propertyName, oldValue, newValue);
+			pcs.firePropertyChange(propertyName, oldValue, newValue);
 		}
 	}
 	
@@ -309,7 +342,7 @@ public class TabBarDockingPort extends Box implements DockingPort<Integer> {
 
 		private Integer getDropLocation(Point point) {
 			int count = getDockableCount();
-			Component comp = getComponentAt(point);
+			Component comp = box.getComponentAt(point);
 			
 			for (int index = 0; index < count; index++) {
 				if (comp == tabList.get(index))
@@ -321,7 +354,7 @@ public class TabBarDockingPort extends Box implements DockingPort<Integer> {
 
 		@Override
 		protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-			TabBarDockingPort.this.firePropertyChange(propertyName, oldValue, newValue);
+			pcs.firePropertyChange(propertyName, oldValue, newValue);
 		}
 	}
 		

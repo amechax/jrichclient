@@ -100,7 +100,7 @@ public class TabbedPaneDockingPort extends JPanel implements DockingPort<Integer
 	public JTabbedPane getTabbedPane() {
 		return tabbedPane;
 	}
-	
+		
 // Title ***********************************************************************
 	
 	public String getTitle() {

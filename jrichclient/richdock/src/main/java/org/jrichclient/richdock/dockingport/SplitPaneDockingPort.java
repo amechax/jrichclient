@@ -81,7 +81,7 @@ public class SplitPaneDockingPort extends JSplitPane implements DockingPort<Stri
 	public SplitPaneDockingPort clone() throws CloneNotSupportedException {
 		return (SplitPaneDockingPort)XMLUtils.duplicate(this, false);
 	}
-	
+		
 // Title ***********************************************************************
 	
 	public String getTitle() {

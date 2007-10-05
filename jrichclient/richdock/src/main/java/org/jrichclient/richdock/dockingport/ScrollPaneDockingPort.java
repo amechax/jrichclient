@@ -57,7 +57,7 @@ public class ScrollPaneDockingPort extends JScrollPane implements DockingPort<St
 	public ScrollPaneDockingPort clone() throws CloneNotSupportedException {
 		return (ScrollPaneDockingPort)XMLUtils.duplicate(this, false);
 	}
-	
+		
 // Title ***********************************************************************
 	
 	public String getTitle() {

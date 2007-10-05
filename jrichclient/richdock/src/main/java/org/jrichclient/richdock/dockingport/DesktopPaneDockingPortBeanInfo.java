@@ -23,7 +23,7 @@ import static org.jrichclient.richdock.utils.PropertyDescriptorFactory.*;
 import java.beans.BeanDescriptor;
 import java.beans.DefaultPersistenceDelegate;
 import java.beans.Encoder;
-import java.beans.EventSetDescriptor;
+import java.beans.Expression;
 import java.beans.PersistenceDelegate;
 import java.beans.PropertyDescriptor;
 import java.beans.SimpleBeanInfo;
@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jrichclient.richdock.Dockable;
-import org.jrichclient.richdock.DockingPort;
 
 public class DesktopPaneDockingPortBeanInfo extends SimpleBeanInfo {
 // PropertyDescriptors *********************************************************
@@ -44,24 +43,23 @@ public class DesktopPaneDockingPortBeanInfo extends SimpleBeanInfo {
 		return createPropertyDescriptorArray(descriptorList);
 	}
 	
-// EventSetDescriptors *********************************************************
-	
-	@Override
-	public EventSetDescriptor[] getEventSetDescriptors() {
-		return new EventSetDescriptor[] { } ;
-	}
-
 // PersistenceDelegate *********************************************************
 	
 	private static PersistenceDelegate DELEGATE = new Delegate();
 	
 	private static class Delegate extends DefaultPersistenceDelegate {
+		@Override
+		protected Expression instantiate(Object oldInstance, Encoder out) {
+			DesktopPaneDockingPort oldPort = (DesktopPaneDockingPort)oldInstance;
+			return new Expression(oldPort, DesktopPaneDockingPort.class, "new",
+				new Object[] { oldPort.getComponent() });
+		}
 		
 		@Override
 		protected void initialize(Class<?> type, Object oldInstance, Object newInstance, Encoder out) {
 			super.initialize(type, oldInstance, newInstance, out);
 
-			DockingPort<?> port = (DockingPort<?>)oldInstance;
+			DesktopPaneDockingPort port = (DesktopPaneDockingPort)oldInstance;
 			for (Dockable dockable : port)
 				out.writeStatement(new Statement(port, "dock", 
 					new Object[] { dockable, port.getLocation(dockable) }));

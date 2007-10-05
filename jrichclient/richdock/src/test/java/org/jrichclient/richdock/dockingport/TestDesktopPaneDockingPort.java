@@ -2,7 +2,10 @@ package org.jrichclient.richdock.dockingport;
 
 import static org.junit.Assert.*;
 
+import java.awt.Dimension;
+
 import javax.swing.JButton;
+import javax.swing.JDesktopPane;
 import javax.swing.JPopupMenu;
 
 import org.jrichclient.richdock.Dockable;
@@ -48,74 +51,19 @@ public class TestDesktopPaneDockingPort extends DockingPortTester<Integer> {
 	
 	@Test
 	public void testConstructor2() {
+		JDesktopPane desktopPane = new JDesktopPane();
+		desktopPane.setSize(new Dimension(640, 480));
+		
 		String testTitle = "Test Title";
-		DesktopPaneDockingPort dockingPort = new DesktopPaneDockingPort(testTitle);
+		DesktopPaneDockingPort dockingPort = 
+			new DesktopPaneDockingPort(desktopPane);
+		
+		dockingPort.setTitle(testTitle);
+		
 		assertEquals(testTitle, dockingPort.getTitle());
 		assertNull(dockingPort.getIconFile());
 		assertNull(dockingPort.getToolTipText());
 		assertNull(dockingPort.getPopupMenu());
-		assertTrue(dockingPort.isDragable());
-		assertTrue(dockingPort.isFloatable());
-		assertTrue(dockingPort.isDropable());
-		assertNull(dockingPort.getDockingPort());
-		assertEquals(0, dockingPort.getDockableCount());
-		assertTrue(dockingPort.canClose());
-		assertFalse(dockingPort.getDisposeOnEmpty());
-		assertFalse(dockingPort.isDisposed());
-	}
-	
-	@Test
-	public void testConstructor3() {
-		String testTitle = "Test Title";
-		String testIconFile = ImageResources.GLOBE_IMAGE;
-		DesktopPaneDockingPort dockingPort = new DesktopPaneDockingPort(testTitle, testIconFile);
-		assertEquals(testTitle, dockingPort.getTitle());
-		assertEquals(testIconFile, dockingPort.getIconFile());
-		assertNull(dockingPort.getToolTipText());
-		assertNull(dockingPort.getPopupMenu());
-		assertTrue(dockingPort.isDragable());
-		assertTrue(dockingPort.isFloatable());
-		assertTrue(dockingPort.isDropable());
-		assertNull(dockingPort.getDockingPort());
-		assertEquals(0, dockingPort.getDockableCount());
-		assertTrue(dockingPort.canClose());
-		assertFalse(dockingPort.getDisposeOnEmpty());
-		assertFalse(dockingPort.isDisposed());
-	}
-	
-	@Test
-	public void testConstructor4() {
-		String testTitle = "Test Title";
-		String testIconFile = ImageResources.GLOBE_IMAGE;
-		String testToolTipText = "Test ToolTipText";
-		DesktopPaneDockingPort dockingPort = new DesktopPaneDockingPort(
-			testTitle, testIconFile, testToolTipText);
-		assertEquals(testTitle, dockingPort.getTitle());
-		assertEquals(testIconFile, dockingPort.getIconFile());
-		assertEquals(testToolTipText, dockingPort.getToolTipText());
-		assertNull(dockingPort.getPopupMenu());
-		assertTrue(dockingPort.isDragable());
-		assertTrue(dockingPort.isFloatable());
-		assertTrue(dockingPort.isDropable());
-		assertNull(dockingPort.getDockingPort());
-		assertEquals(0, dockingPort.getDockableCount());
-		assertTrue(dockingPort.canClose());
-		assertFalse(dockingPort.getDisposeOnEmpty());
-		assertFalse(dockingPort.isDisposed());
-	}
-	
-	@Test
-	public void testConstructor5() {
-		String testTitle = "Test Title";
-		String testIconFile = ImageResources.GLOBE_IMAGE;
-		String testToolTipText = "Test ToolTipText";
-		JPopupMenu testPopupMenu = new JPopupMenu();
-		DesktopPaneDockingPort dockingPort = new DesktopPaneDockingPort(
-			testTitle, testIconFile, testToolTipText, testPopupMenu);
-		assertEquals(testTitle, dockingPort.getTitle());
-		assertEquals(testIconFile, dockingPort.getIconFile());
-		assertEquals(testToolTipText, dockingPort.getToolTipText());
-		assertSame(testPopupMenu, dockingPort.getPopupMenu());
 		assertTrue(dockingPort.isDragable());
 		assertTrue(dockingPort.isFloatable());
 		assertTrue(dockingPort.isDropable());
@@ -135,8 +83,11 @@ public class TestDesktopPaneDockingPort extends DockingPortTester<Integer> {
 		String testToolTipText = "Test ToolTipText";
 		JPopupMenu testPopupMenu = new JPopupMenu();
 		
-		DesktopPaneDockingPort originalPort = new DesktopPaneDockingPort(
-			testTitle, testIconFile, testToolTipText, testPopupMenu);
+		DesktopPaneDockingPort originalPort = new DesktopPaneDockingPort();
+		originalPort.setTitle(testTitle);
+		originalPort.setIconFile(testIconFile);
+		originalPort.setToolTipText(testToolTipText);
+		originalPort.setPopupMenu(testPopupMenu);
 		originalPort.dock(createTestDockable("Dockable 0"), 0);
 		originalPort.dock(createTestDockable("Dockable 1"), 1);
 		originalPort.dock(createTestDockable("Dockable 2"), 2);

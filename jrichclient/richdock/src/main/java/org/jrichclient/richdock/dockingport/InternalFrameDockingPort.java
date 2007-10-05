@@ -73,7 +73,7 @@ public class InternalFrameDockingPort extends JInternalFrame implements DockingP
 	public InternalFrameDockingPort clone() throws CloneNotSupportedException {
 		return (InternalFrameDockingPort)XMLUtils.duplicate(this, false);
 	}
-	
+		
 // IconImage *******************************************************************
 	
 	public String getIconFile() {

@@ -87,7 +87,7 @@ public class MultiSplitDockingPort extends JXMultiSplitPane implements DockingPo
 	public MultiSplitLayout.Node getModel() {
 		return getMultiSplitLayout().getModel();
 	}
-		
+			
 // Title ***********************************************************************
 
 	public String getTitle() {

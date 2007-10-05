@@ -69,7 +69,7 @@ public class FrameDockingPort extends JFrame implements DockingPort<String> {
 	public FrameDockingPort clone() throws CloneNotSupportedException {
 		return (FrameDockingPort)XMLUtils.duplicate(this, false);
 	}
-	
+		
 // IconFile ********************************************************************
 	
 	public String getIconFile() {
@@ -259,6 +259,7 @@ public class FrameDockingPort extends JFrame implements DockingPort<String> {
 	private class CloseListener extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent event) {
+			XMLUtils.saveDesktop(false);
 			if (canClose())
 				dispose();
 		}

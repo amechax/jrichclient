@@ -20,7 +20,11 @@ package org.jrichclient.richdock.dockable;
 
 import static org.jrichclient.richdock.utils.PropertyDescriptorFactory.*;
 
-import java.beans.EventSetDescriptor;
+import java.beans.BeanDescriptor;
+import java.beans.DefaultPersistenceDelegate;
+import java.beans.Encoder;
+import java.beans.Expression;
+import java.beans.PersistenceDelegate;
 import java.beans.PropertyDescriptor;
 import java.beans.SimpleBeanInfo;
 import java.util.ArrayList;
@@ -35,11 +39,28 @@ public class ToolBarDockableBeanInfo extends SimpleBeanInfo {
 		addDockablePropertyDescriptors(descriptorList, ToolBarDockable.class);
 		return createPropertyDescriptorArray(descriptorList);
 	}
+			
+// PersistenceDelegate *********************************************************
+	
+	private static PersistenceDelegate DELEGATE = new Delegate();
+	
+	private static class Delegate extends DefaultPersistenceDelegate {
 		
-// EventSetDescriptors *********************************************************
-		
-	@Override
-	public EventSetDescriptor[] getEventSetDescriptors() {
-		return new EventSetDescriptor[] { } ;
+		@Override
+		protected Expression instantiate(Object oldInstance, Encoder out) {
+			ToolBarDockable oldDockable = (ToolBarDockable)oldInstance;
+			return new Expression(oldDockable, ToolBarDockable.class, "new",
+				new Object[] { oldDockable.getComponent() });
+		}
 	}
+		
+// BeanDescriptor **************************************************************
+	
+	@Override
+	public BeanDescriptor getBeanDescriptor() {
+		BeanDescriptor descriptor = new BeanDescriptor(ToolBarDockable.class);
+		descriptor.setValue("persistenceDelegate", DELEGATE);
+		return descriptor;
+	}
+
 }

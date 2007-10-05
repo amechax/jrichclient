@@ -83,32 +83,7 @@ public class DesktopDockingPort implements DockingPort<Integer> {
 
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		pcs.removePropertyChangeListener(propertyName, listener);
-	}
-	
-// Size ************************************************************************
-	
-	public Dimension getSize() {
-		return null;
-	}
-
-	public void setSize(Dimension size) {
-		throw new UnsupportedOperationException("Cannot change the size of the desktop");
-
-	}
-	
-// Location ********************************************************************
-
-	public Point getLocation() {
-		return null;
-	}
-
-	public void setLocation(Point location) {
-		throw new UnsupportedOperationException("Cannot change the size of the desktop");
-	}
-
-	public Integer getLocation(Dockable dockable) {
-		return helper.getLocation(dockable);
-	}
+	}	
 	
 // Title ***********************************************************************
 	
@@ -208,14 +183,21 @@ public class DesktopDockingPort implements DockingPort<Integer> {
 	public void undock(Dockable dockable, boolean disposeOnEmpty) {
 		helper.undock(dockable, disposeOnEmpty);
 	}
-
-	public Dockable getDockable(Integer location) {
-		return helper.getDockable(location);
-	}
+	
+// Lookups *********************************************************************
 
 	public int getDockableCount() {
 		return helper.getDockableCount();
 	}
+
+	public Dockable getDockable(Integer location) {
+		return helper.getDockable(location);
+	}
+	
+	public Integer getLocation(Dockable dockable) {
+		return helper.getLocation(dockable);
+	}
+	
 
 	public Iterator<Dockable> iterator() {
 		return helper.iterator();
@@ -235,11 +217,11 @@ public class DesktopDockingPort implements DockingPort<Integer> {
 				throw new IllegalArgumentException("Only frames can be docked in the desktop");
 			
 			Frame frame = (Frame)dockable.getComponent();
-			Dimension size = dockable.getSize();
+			Dimension size = frame.getSize();
 			if (size == null || size.width == 0 || size.height == 0)
 				frame.pack();
 			
-			Point position = dockable.getLocation();
+			Point position = frame.getLocation();
 			if (position == null)
 				frame.setLocationByPlatform(true);
 			
@@ -284,7 +266,8 @@ public class DesktopDockingPort implements DockingPort<Integer> {
 	public void setExitOnDispose(boolean exitOnDispose) {
 		boolean oldExitOnDispose = getExitOnDispose();
 		this.exitOnDispose = exitOnDispose;
-		pcs.firePropertyChange(PROPERTYNAME_EXIT_ON_DISPOSE, oldExitOnDispose, getExitOnDispose());
+		pcs.firePropertyChange(PROPERTYNAME_EXIT_ON_DISPOSE, 
+			oldExitOnDispose, getExitOnDispose());
 	}
 	
 // Dispose *********************************************************************
@@ -295,8 +278,9 @@ public class DesktopDockingPort implements DockingPort<Integer> {
 
 	public void dispose() {
 		helper.dispose();
-		if (getExitOnDispose())
+		if (getExitOnDispose()) {
 			System.exit(0);
+		}
 	}
 
 }
