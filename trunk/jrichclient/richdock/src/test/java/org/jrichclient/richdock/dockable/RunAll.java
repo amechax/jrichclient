@@ -9,7 +9,8 @@ import junit.framework.TestSuite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({  
 	TestBasicDockable.class,
-	TestToolBarDockable.class
+	TestToolBarDockable.class,
+	TestStatusBarDockable.class
 })
 public class RunAll {
 	public static Test suite() {
@@ -18,6 +19,7 @@ public class RunAll {
 		//$JUnit-BEGIN$
 		suite.addTest(TestBasicDockable.suite());
 		suite.addTest(TestToolBarDockable.suite());
+		suite.addTest(TestStatusBarDockable.suite());
 		//$JUnit-END$
 		
 		return suite;

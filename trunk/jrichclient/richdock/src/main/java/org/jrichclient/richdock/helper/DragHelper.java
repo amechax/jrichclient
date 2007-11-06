@@ -34,6 +34,7 @@ import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
 import java.awt.dnd.DragSourceListener;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
@@ -103,8 +104,10 @@ public class DragHelper extends DragSourceAdapter implements
 			return dockable;
 		case DnDConstants.ACTION_COPY:
 			try {
-				return dockable.clone();
-			} catch (CloneNotSupportedException ex) {
+				Method cloneMethod = dockable.getClass().getDeclaredMethod("clone");
+				cloneMethod.setAccessible(true);
+				return (Dockable)cloneMethod.invoke(dockable);
+			} catch (Exception ex) {
 				return null;
 			}
 		default:

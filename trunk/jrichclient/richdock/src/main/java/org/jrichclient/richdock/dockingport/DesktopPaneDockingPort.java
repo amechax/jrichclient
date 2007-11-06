@@ -71,7 +71,7 @@ public class DesktopPaneDockingPort implements DockingPort<Integer> {
 	
 	@Override
 	public DesktopPaneDockingPort clone() throws CloneNotSupportedException {
-		return (DesktopPaneDockingPort)XMLUtils.duplicate(this, true);
+		return (DesktopPaneDockingPort)XMLUtils.duplicate(this, false);
 	}
 	
 // PropertyChangeBroadcaster ***************************************************

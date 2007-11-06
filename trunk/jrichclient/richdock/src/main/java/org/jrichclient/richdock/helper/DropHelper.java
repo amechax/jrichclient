@@ -26,11 +26,13 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetListener;
+import java.lang.reflect.Method;
 
 import org.jrichclient.richdock.Dockable;
 import org.jrichclient.richdock.DockingPort;
 
-public abstract class DropHelper extends DropTargetAdapter implements DropTargetListener {
+public abstract class DropHelper extends DropTargetAdapter 
+		implements DropTargetListener {
 	private final DropTarget dropTarget;
 	
 // Constructors ****************************************************************
@@ -98,8 +100,10 @@ public abstract class DropHelper extends DropTargetAdapter implements DropTarget
 				return dockable;
 			case DnDConstants.ACTION_COPY:
 				try {
-					return dockable.clone();
-				} catch (CloneNotSupportedException ex) {
+					Method cloneMethod = dockable.getClass().getDeclaredMethod("clone");
+					cloneMethod.setAccessible(true);
+					return (Dockable)cloneMethod.invoke(dockable);
+				} catch (Exception ex) {
 					return null;
 				}
 			default:
