@@ -84,7 +84,7 @@ public class TabBarDockingPort implements DockingPort<Integer> {
 	
 	@Override
 	public TabBarDockingPort clone() throws CloneNotSupportedException {
-		return (TabBarDockingPort)XMLUtils.duplicate(this, true);
+		return (TabBarDockingPort)XMLUtils.duplicate(this, false);
 	}
 	
 // PropertyChangeBroadcaster ***************************************************
