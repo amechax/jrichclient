@@ -35,6 +35,7 @@ public class ImageResources extends ListResourceBundle {
 // Icon file names *************************************************************
 	
 	public static final String GLOBE_IMAGE = IMAGE_DIR + "globe.gif";
+	public static final String RESIZE_IMAGE = IMAGE_DIR + "resize.gif";
 	public static final String LEFT_ARROW_IMAGE = IMAGE_DIR + "left_arrow.gif";
 	public static final String RIGHT_ARROW_IMAGE = IMAGE_DIR + "right_arrow.gif";
 	public static final String UP_ARROW_IMAGE = IMAGE_DIR + "up_arrow.gif";
@@ -59,6 +60,7 @@ public class ImageResources extends ListResourceBundle {
 	
 	static final Object[][] contents = {
 		{ GLOBE_IMAGE, getImage(GLOBE_IMAGE) },
+		{ RESIZE_IMAGE, getImage(RESIZE_IMAGE) },
 		{ LEFT_ARROW_IMAGE, getImage(LEFT_ARROW_IMAGE) },
 		{ RIGHT_ARROW_IMAGE, getImage(RIGHT_ARROW_IMAGE) },
 		{ UP_ARROW_IMAGE, getImage(UP_ARROW_IMAGE) },

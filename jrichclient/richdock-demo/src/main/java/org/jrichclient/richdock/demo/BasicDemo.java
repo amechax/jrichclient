@@ -63,7 +63,8 @@ public final class BasicDemo {
 	}
 
 	private static Dockable createTestDockable(String title) {
-		BasicDockable basicDockable = new BasicDockable(new JButton(title), 
+		JButton button = new JButton(title);
+		BasicDockable basicDockable = new BasicDockable(button, 
 			title, ImageResources.GLOBE_IMAGE);
 		basicDockable.setPopupMenu(ActionUtils.createClosePopupMenu(basicDockable));
 			

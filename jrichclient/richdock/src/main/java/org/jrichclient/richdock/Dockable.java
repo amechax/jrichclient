@@ -46,57 +46,30 @@ import javax.swing.JPopupMenu;
  * @author Bruce Alspaugh
  */
 public interface Dockable extends PropertyChangeBroadcaster, Cloneable {
-	/**
-	 * Bound property name for title.
-	 */
+	/** Bound property name for title. */
 	public static final String PROPERTYNAME_TITLE = "title";
 	
-	/**
-	 * Bound property name for iconFile.
-	 */
+	/** Bound property name for iconFile. */
 	public static final String PROPERTYNAME_ICON_FILE = "iconFile";
 	
-	/**
-	 * Bound property name for toolTipText.
-	 */
+	/** Bound property name for toolTipText. */
 	public static final String PROPERTYNAME_TOOL_TIP_TEXT = "toolTipText";
 	
-	/**
-	 * Bound property name for popupMenu.
-	 */
+	/** Bound property name for popupMenu. */
 	public static final String PROPERTYNAME_POPUP_MENU = "popupMenu";
 	
-	/**
-	 * Bound property name for dragable.
-	 */
+	/** Bound property name for dragable. */
 	public static final String PROPERTYNAME_DRAGABLE = "dragable";
 	
-	/**
-	 * Bound property name for floatable.
-	 */
+	/** Bound property name for floatable. */
 	public static final String PROPERTYNAME_FLOATABLE = "floatable";
 	
-	/**
-	 * Bound property name for dockingPort.
-	 */
-	
+	/** Bound property name for dockingPort. */
 	public static final String PROPERTYNAME_DOCKING_PORT = "dockingPort";
 	
-	/**
-	 * Bound property name for disposed.
-	 */
+	/** Bound property name for disposed. */
 	public static final String PROPERTYNAME_DISPOSED = "disposed";
-	
-	/**
-	 * Dockables are expected to be cloneable.  Most implementaions use
-	 * JavaBeans persistence to serialize and deserialize an instance.
-	 * 
-	 * @return clone of the Dockable.
-	 * 
-	 * @throws CloneNotSupportedException
-	 */
-	public Dockable clone() throws CloneNotSupportedException;
-		
+			
 	/**
 	 * Returns the title of the <code>Dockable</code>.
 	 * 

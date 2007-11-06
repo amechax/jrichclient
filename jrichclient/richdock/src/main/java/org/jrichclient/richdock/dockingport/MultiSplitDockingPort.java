@@ -110,6 +110,7 @@ public class MultiSplitDockingPort extends JXMultiSplitPane implements DockingPo
 	
 // ToolTipText *****************************************************************
 	
+	@Override
 	public void setToolTipText(String toolTipText) {
 		super.setToolTipText(toolTipText);
 		
