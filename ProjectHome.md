@@ -1,0 +1,1 @@
+JRichClient is a set of Java developer libraries to build rich Swing desktop client applications. The first library is Richdock--a docking framework to manage the windows within your application.  You can find out more at:  http://www.jrichclient.org
